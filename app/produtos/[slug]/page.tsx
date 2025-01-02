@@ -119,10 +119,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           <div className="space-x-2">
             {product.isNew && (
-              <Badge variant="secondary">Novo</Badge>
+              <Badge className="bg-secondary text-secondary-foreground">Novo</Badge>
             )}
             {product.isSale && (
-              <Badge variant="destructive">Promoção</Badge>
+              <Badge className="bg-destructive text-destructive-foreground">Promoção</Badge>
             )}
           </div>
 

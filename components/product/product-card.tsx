@@ -22,14 +22,7 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   const handleAddToCart = () => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      slug: product.slug,
-      images: product.images,
-      price: product.price,
-      salePrice: product.salePrice,
-    })
+    addToCart(product) 
     toast({
       title: "Produto adicionado!",
       description: `${product.name} foi adicionado ao carrinho.`
