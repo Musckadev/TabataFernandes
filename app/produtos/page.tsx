@@ -68,7 +68,7 @@ export default function ProductsPage() {
       }
 
       if (selectedCollections.length > 0) {
-        if (!selectedCollections.includes(product.collection)) {
+        if (!product.collection || !selectedCollections.includes(product.collection)) {
           return false
         }
       }
