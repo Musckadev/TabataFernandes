@@ -45,7 +45,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
             {/* Logo and Social Links */}
             <div className="lg:col-span-2">
-              <span className="text-2xl font-serif font-medium block mb-6">Joalheria</span>
+              <span className="text-2xl font-serif font-medium block mb-6">Joalheria Store</span>
               <p className="text-sm text-gray-600 mb-6">
                 Sua loja de semijoias preferida, com peças exclusivas e design único para todos os momentos.
               </p>
@@ -146,7 +146,7 @@ export default function Footer() {
           <div className="flex flex-col items-center gap-8 sm:flex-row sm:justify-between">
             {/* Copyright */}
             <p className="text-xs text-gray-500">
-              &copy; 2024 Tabata Fernandes. Todos os direitos reservados.
+              &copy; 2024 Tabata Fernandes Store. Todos os direitos reservados.
             </p>
 
             {/* Payment Methods */}
