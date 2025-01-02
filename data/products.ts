@@ -7,20 +7,22 @@ function generateSlug(name: string): string {
     .replace(/^-+|-+$/g, '')
 }
 
+import { Product } from "@/app/admin/produtos/columns"
+
 export interface Product {
   id: string
   name: string
   description: string
   price: number
-  images: string[]
+  salePrice?: number
   category: string
   collection: string
   material: string
+  images: string[]
   inStock: boolean
-  isSale?: boolean
   isNew?: boolean
-  salePrice?: number
-  slug: string
+  isSale?: boolean
+  slug?: string
 }
 
 export const products: Product[] = [
@@ -29,105 +31,48 @@ export const products: Product[] = [
     name: "Colar Delicado Coração",
     description: "Colar delicado em prata 925 com pingente de coração",
     price: 199.90,
-    images: ["/products/colar-1.jpg"],
+    salePrice: 159.90,
     category: "Colares",
     collection: "Clássica",
     material: "Prata 925",
+    images: [
+      "https://source.unsplash.com/random/800x800?jewelry,necklace&1",
+      "https://source.unsplash.com/random/800x800?jewelry,necklace&2"
+    ],
     inStock: true,
     isNew: true,
-    slug: "colar-delicado-coracao"
+    isSale: true
   },
   {
     id: "2",
-    name: "Brinco Argola Moderna",
-    description: "Brinco argola em aço inoxidável com design moderno",
-    price: 89.90,
-    images: ["/products/brinco-1.jpg"],
+    name: "Brinco Argola Dourada",
+    description: "Brinco argola em ouro 18k",
+    price: 899.90,
     category: "Brincos",
     collection: "Moderna",
-    material: "Aço Inoxidável",
+    material: "Ouro 18k",
+    images: [
+      "https://source.unsplash.com/random/800x800?jewelry,earring&1"
+    ],
     inStock: true,
-    isSale: true,
-    salePrice: 69.90,
-    slug: "brinco-argola-moderna"
+    isNew: false,
+    isSale: false
   },
   {
     id: "3",
-    name: "Anel Solitário",
-    description: "Anel solitário em ouro 18k com zircônia",
-    price: 599.90,
-    images: ["/products/anel-1.jpg"],
+    name: "Anel Solitário Diamante",
+    description: "Anel solitário em ouro 18k com diamante",
+    price: 2999.90,
     category: "Anéis",
     collection: "Luxo",
     material: "Ouro 18k",
-    inStock: true,
-    isNew: true,
-    slug: "anel-solitario"
-  },
-  {
-    id: "4",
-    name: "Pulseira Pérolas",
-    description: "Pulseira de pérolas naturais com fecho em prata",
-    price: 299.90,
-    images: ["/products/pulseira-1.jpg"],
-    category: "Pulseiras",
-    collection: "Clássica",
-    material: "Pérola",
-    inStock: true,
-    slug: "pulseira-perolas"
-  },
-  {
-    id: "5",
-    name: "Colar Gargantilha",
-    description: "Colar gargantilha em prata 925 com zircônias",
-    price: 249.90,
-    images: ["/products/colar-2.jpg"],
-    category: "Colares",
-    collection: "Moderna",
-    material: "Prata 925",
-    inStock: true,
-    isSale: true,
-    salePrice: 199.90,
-    slug: "colar-gargantilha"
-  },
-  {
-    id: "6",
-    name: "Brinco Cascata",
-    description: "Brinco cascata em ouro 18k com zircônias",
-    price: 899.90,
-    images: ["/products/brinco-2.jpg"],
-    category: "Brincos",
-    collection: "Luxo",
-    material: "Ouro 18k",
-    inStock: true,
-    isNew: true,
-    slug: "brinco-cascata"
-  },
-  {
-    id: "7",
-    name: "Anel Aliança",
-    description: "Aliança em prata 925 com acabamento fosco",
-    price: 149.90,
-    images: ["/products/anel-2.jpg"],
-    category: "Anéis",
-    collection: "Minimalista",
-    material: "Prata 925",
-    inStock: true,
-    isSale: true,
-    salePrice: 129.90,
-    slug: "anel-alianca"
-  },
-  {
-    id: "8",
-    name: "Pulseira Corrente",
-    description: "Pulseira corrente em aço inoxidável",
-    price: 79.90,
-    images: ["/products/pulseira-2.jpg"],
-    category: "Pulseiras",
-    collection: "Moderna",
-    material: "Aço Inoxidável",
-    inStock: true,
-    isNew: true,
-    slug: "pulseira-corrente"
+    images: [
+      "https://source.unsplash.com/random/800x800?jewelry,ring&1",
+      "https://source.unsplash.com/random/800x800?jewelry,ring&2",
+      "https://source.unsplash.com/random/800x800?jewelry,ring&3"
+    ],
+    inStock: false,
+    isNew: false,
+    isSale: false
   }
 ]

@@ -1,175 +1,107 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { products } from "@/data/products"
-import { formatPrice } from "@/lib/utils"
-import { Edit, Plus, Trash } from "lucide-react"
-import Image from "next/image"
 import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { ProductForm } from "@/components/product/product-form"
+import { DataTable } from "@/components/ui/data-table"
+import { columns } from "./columns"
+import { products } from "@/data/products"
 
 export default function ProductsPage() {
-  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [open, setOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+
+  const handleProductSubmit = (data: any) => {
+    const product = {
+      ...data,
+      price: Number(data.price),
+      salePrice: data.salePrice ? Number(data.salePrice) : undefined,
+    }
+
+    if (selectedProduct) {
+      // Editar produto existente
+      console.log("Produto editado:", { ...selectedProduct, ...product })
+    } else {
+      // Adicionar novo produto
+      console.log("Novo produto:", product)
+    }
+    
+    setSelectedProduct(null)
+    setOpen(false)
+  }
+
+  const handleEdit = (product: Product) => {
+    setSelectedProduct(product)
+    setOpen(true)
+  }
+
+  const handleDuplicate = (product: Product) => {
+    const duplicatedProduct = {
+      ...product,
+      id: crypto.randomUUID(),
+      name: `${product.name} (Cópia)`,
+    }
+    console.log("Produto duplicado:", duplicatedProduct)
+  }
+
+  const handleDelete = (product: Product) => {
+    if (confirm(`Tem certeza que deseja excluir o produto "${product.name}"?`)) {
+      console.log("Produto excluído:", product)
+    }
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="flex h-full flex-col space-y-6 p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-medium">Produtos</h2>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-3xl font-bold">Produtos</h1>
+          <p className="text-muted-foreground">
             Gerencie os produtos da sua loja
           </p>
         </div>
-        <Dialog>
+
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Produto
-            </Button>
+            <Button>Adicionar Produto</Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-[800px]">
             <DialogHeader>
-              <DialogTitle>Novo Produto</DialogTitle>
+              <DialogTitle>
+                {selectedProduct ? "Editar Produto" : "Adicionar Produto"}
+              </DialogTitle>
               <DialogDescription>
-                Adicione um novo produto à sua loja
+                {selectedProduct 
+                  ? "Edite as informações do produto"
+                  : "Adicione um novo produto à sua loja"}
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Nome do Produto</Label>
-                <Input id="name" placeholder="Nome do produto" />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="description">Descrição</Label>
-                <Textarea
-                  id="description"
-                  placeholder="Descrição do produto"
-                  rows={3}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="price">Preço</Label>
-                  <Input
-                    id="price"
-                    placeholder="0.00"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="salePrice">Preço Promocional</Label>
-                  <Input
-                    id="salePrice"
-                    placeholder="0.00"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="images">Imagens</Label>
-                <Input id="images" type="file" multiple accept="image/*" />
-              </div>
+            <div className="max-h-[calc(100vh-200px)] overflow-y-auto pr-6">
+              <ProductForm 
+                onSubmit={handleProductSubmit} 
+                defaultValues={selectedProduct || undefined}
+              />
             </div>
-            <DialogFooter>
-              <Button variant="outline">Cancelar</Button>
-              <Button>Salvar Produto</Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
 
-      <Card>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Produto</TableHead>
-              <TableHead>Categoria</TableHead>
-              <TableHead>Preço</TableHead>
-              <TableHead>Estoque</TableHead>
-              <TableHead>Vendas</TableHead>
-              <TableHead>Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {products.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>
-                  <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 overflow-hidden rounded-lg bg-gray-100">
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        width={64}
-                        height={64}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <p className="font-medium">{product.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        SKU: {product.id}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>{product.category}</TableCell>
-                <TableCell>
-                  <div>
-                    {product.salePrice ? (
-                      <>
-                        <p className="font-medium">
-                          {formatPrice(product.salePrice)}
-                        </p>
-                        <p className="text-sm text-muted-foreground line-through">
-                          {formatPrice(product.price)}
-                        </p>
-                      </>
-                    ) : (
-                      <p className="font-medium">{formatPrice(product.price)}</p>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>{product.stock ? product.stock : "Em Estoque"}</TableCell>
-                <TableCell>{product.soldCount || 0}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Trash className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
+      <div className="flex-1">
+        <DataTable 
+          columns={columns} 
+          data={products} 
+          onEdit={handleEdit}
+          onDuplicate={handleDuplicate}
+          onDelete={handleDelete}
+        />
+      </div>
     </div>
   )
 }
