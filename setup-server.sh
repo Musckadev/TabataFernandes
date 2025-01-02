@@ -50,6 +50,8 @@ if [ -d "$APP_DIR" ]; then
     if [ -f .env ]; then
         cp .env .env.backup
     fi
+    # Parar a aplicação se estiver rodando
+    pm2 stop tabata || true
     # Atualizar código
     git fetch origin main
     git reset --hard origin/main
@@ -88,6 +90,11 @@ server {
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 1m;
+        proxy_connect_timeout 1m;
     }
 }
 EOL
@@ -100,17 +107,22 @@ rm -f /etc/nginx/sites-enabled/default
 nginx -t
 check_error "Configuração do Nginx inválida"
 
-# Reiniciar Nginx
-systemctl restart nginx
-check_error "Falha ao reiniciar Nginx"
+# Recarregar Nginx
+systemctl reload nginx
+check_error "Falha ao recarregar Nginx"
 
-# Gerenciar aplicação com PM2
+# Iniciar a aplicação com PM2
 cd $APP_DIR
-pm2 delete tabata 2>/dev/null || true  # Tenta parar se já existir
+pm2 delete tabata || true
 pm2 start npm --name "tabata" -- start
 check_error "Falha ao iniciar aplicação com PM2"
-pm2 save
-pm2 startup
-check_error "Falha ao configurar PM2 startup"
 
-echo "Deploy concluído com sucesso!"
+# Salvar configuração do PM2
+pm2 save
+check_error "Falha ao salvar configuração do PM2"
+
+# Configurar PM2 para iniciar no boot
+pm2 startup
+check_error "Falha ao configurar PM2 para iniciar no boot"
+
+echo "Setup concluído com sucesso!"
