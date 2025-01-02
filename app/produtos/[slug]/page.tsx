@@ -12,7 +12,7 @@ interface ProductPageProps {
     slug: string
   }
 }
-
+/* Testando a funcao */
 export default function ProductPage({ params }: ProductPageProps) {
   const product = products.find((p) => p.slug === params.slug)
 
