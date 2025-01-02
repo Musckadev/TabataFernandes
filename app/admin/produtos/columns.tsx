@@ -14,21 +14,9 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { formatPrice } from "@/lib/utils"
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header"
+import { Product } from "@/types"
 
-export type Product = {
-  id: string
-  name: string
-  description: string
-  price: number
-  salePrice?: number
-  category: string
-  collection: string
-  material: string
-  images: string[]
-  inStock: boolean
-  isNew: boolean
-  isSale: boolean
-}
+export type { Product }
 
 export const columns: ColumnDef<Product>[] = [
   {

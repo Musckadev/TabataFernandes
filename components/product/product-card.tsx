@@ -1,8 +1,6 @@
-"use client"
-
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Product } from "@/data/products"
+import { Product } from "@/types"
 import { formatPrice } from "@/lib/utils"
 import { Heart, ShoppingCart } from "lucide-react"
 import Image from "next/image"
@@ -48,13 +46,15 @@ export function ProductCard({ product }: ProductCardProps) {
         <CardContent className="p-0">
           {/* Image Container */}
           <div className="relative aspect-square overflow-hidden bg-gray-100">
-            <Image
-              src={product.images[0]}
-              alt={product.name}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-            />
+            {product.images && product.images.length > 0 && (
+              <Image
+                src={product.images[0]}
+                alt={product.name}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+              />
+            )}
             
             {/* Badges */}
             <div className="absolute left-2 right-2 top-2 flex justify-between">
@@ -71,8 +71,6 @@ export function ProductCard({ product }: ProductCardProps) {
                 )}
               </div>
               <Button
-                size="icon"
-                variant="secondary"
                 className="h-7 w-7 rounded-full bg-white/80 backdrop-blur hover:bg-white"
               >
                 <Heart className="h-3.5 w-3.5" />
@@ -110,12 +108,12 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5">
             {product.material && (
-              <Badge variant="secondary" className="bg-gray-100 text-xs text-gray-700 hover:bg-gray-200">
+              <Badge className="bg-gray-100 text-xs text-gray-700 hover:bg-gray-200">
                 {product.material}
               </Badge>
             )}
             {product.stones && (
-              <Badge variant="secondary" className="bg-gray-100 text-xs text-gray-700 hover:bg-gray-200">
+              <Badge className="bg-gray-100 text-xs text-gray-700 hover:bg-gray-200">
                 {product.stones}
               </Badge>
             )}
@@ -126,7 +124,6 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Add to Cart Button - Always visible */}
       <div className="px-3 pb-3">
         <Button
-          size="sm"
           className="w-full bg-gray-900 text-white hover:bg-gray-800"
           onClick={handleAddToCart}
         >

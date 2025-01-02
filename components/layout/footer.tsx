@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Facebook, Instagram, Twitter, ShieldCheck, Lock, Award } from "lucide-react"
 import Link from "next/link"
 
-export default function Footer() {
+export function Footer() {
   return (
     <footer className="bg-white border-t">
       {/* Security Seals */}

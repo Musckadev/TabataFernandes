@@ -39,12 +39,14 @@ export default function ProductsPage() {
   }
 
   const handleEdit = (product: Product) => {
+    // Criamos um novo objeto mantendo os tipos originais
     const formattedProduct = {
       ...product,
-      price: product.price.toString(),
-      salePrice: product.salePrice?.toString(),
+      // Não convertemos para string aqui, mantemos como número
+      price: product.price,
+      salePrice: product.salePrice
     }
-    setSelectedProduct(formattedProduct as Product)
+    setSelectedProduct(formattedProduct)
     setOpen(true)
   }
 

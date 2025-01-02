@@ -1,12 +1,11 @@
 import Image from "next/image"
-import { Star, Truck, Shield, Heart } from "lucide-react"
+import { Star, Truck, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProductDetails } from "@/components/product/product-details"
 import { notFound } from "next/navigation"
 import { products } from "@/data/products"
+import type { Product } from "@/types"
 
 interface ProductPageProps {
   params: {
@@ -26,14 +25,16 @@ export default function ProductPage({ params }: ProductPageProps) {
       <div className="grid gap-8 md:grid-cols-2">
         {/* Imagens do Produto */}
         <div className="space-y-4">
-          <div className="relative aspect-square overflow-hidden rounded-lg border">
-            <Image
-              src={product.images[0]}
-              alt={product.name}
-              fill
-              className="object-cover"
-            />
-          </div>
+          {product.images.length > 0 && (
+            <div className="relative aspect-square overflow-hidden rounded-lg border">
+              <Image
+                src={product.images[0]}
+                alt={product.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+          )}
           <div className="grid grid-cols-4 gap-4">
             {product.images.map((image, index) => (
               <div key={index} className="relative aspect-square cursor-pointer overflow-hidden rounded-md border hover:border-primary">
@@ -53,21 +54,33 @@ export default function ProductPage({ params }: ProductPageProps) {
           <div>
             <h1 className="text-3xl font-bold">{product.name}</h1>
             <div className="mt-2 flex items-center gap-4">
-              <div className="flex items-center">
-                <Star className="h-5 w-5 fill-primary text-primary" />
-                <span className="ml-1 font-medium">{product.rating}</span>
-                <span className="ml-1 text-muted-foreground">
-                  ({product.reviews} avaliações)
-                </span>
-              </div>
-              <Badge variant="secondary">{product.category}</Badge>
+              {product.rating && (
+                <div className="flex items-center">
+                  <Star className="h-5 w-5 fill-primary text-primary" />
+                  <span className="ml-1 font-medium">{product.rating}</span>
+                  {product.reviews && (
+                    <span className="ml-1 text-muted-foreground">
+                      ({product.reviews} avaliações)
+                    </span>
+                  )}
+                </div>
+              )}
+              <Badge>{product.category}</Badge>
             </div>
           </div>
 
           <div className="space-y-2">
-            <p className="text-3xl font-bold">R$ {product.price.toFixed(2)}</p>
+            <p className="text-3xl font-bold">
+              {new Intl.NumberFormat('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+              }).format(product.price)}
+            </p>
             <p className="text-sm text-muted-foreground">
-              Em até 12x de R$ {(product.price / 12).toFixed(2)}
+              Em até 12x de {new Intl.NumberFormat('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+              }).format(product.price / 12)}
             </p>
           </div>
 

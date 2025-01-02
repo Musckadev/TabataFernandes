@@ -1,3 +1,5 @@
+import { Product } from "@/types"
+
 function generateSlug(name: string): string {
   return name
     .toLowerCase()
@@ -7,41 +9,24 @@ function generateSlug(name: string): string {
     .replace(/^-+|-+$/g, '')
 }
 
-import { Product } from "@/app/admin/produtos/columns"
-
-export interface Product {
-  id: string
-  name: string
-  description: string
-  price: number
-  salePrice?: number
-  category: string
-  collection: string
-  material: string
-  images: string[]
-  inStock: boolean
-  isNew?: boolean
-  isSale?: boolean
-  slug?: string
-}
-
+// Dados dos produtos
 export const products: Product[] = [
   {
     id: "1",
     name: "Colar Delicado Coração",
-    description: "Colar delicado em prata 925 com pingente de coração",
-    price: 199.90,
-    salePrice: 159.90,
+    description: "Um colar delicado com pingente de coração em prata 925",
+    price: 129.90,
     category: "Colares",
-    collection: "Clássica",
+    collection: "Romântica",
     material: "Prata 925",
-    images: [
-      "https://source.unsplash.com/random/800x800?jewelry,necklace&1",
-      "https://source.unsplash.com/random/800x800?jewelry,necklace&2"
-    ],
+    images: ["/images/products/colar-coracao-1.jpg"],
     inStock: true,
     isNew: true,
-    isSale: true
+    isSale: false,
+    sizes: ["Único"],
+    featured: false,
+    slug: "colar-delicado-coracao",
+    stones: ["Zircônia"]
   },
   {
     id: "2",
@@ -56,7 +41,11 @@ export const products: Product[] = [
     ],
     inStock: true,
     isNew: false,
-    isSale: false
+    isSale: false,
+    sizes: ["Único"],
+    featured: false,
+    slug: generateSlug("Brinco Argola Dourada"),
+    stones: []
   },
   {
     id: "3",
@@ -73,6 +62,10 @@ export const products: Product[] = [
     ],
     inStock: false,
     isNew: false,
-    isSale: false
+    isSale: false,
+    sizes: ["Único"],
+    featured: false,
+    slug: generateSlug("Anel Solitário Diamante"),
+    stones: ["Diamante"]
   }
 ]
