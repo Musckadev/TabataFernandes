@@ -1,6 +1,7 @@
 "use client"
 
 import { Card } from "@/components/ui/card"
+import { Loading } from "@/components/ui/loading"
 import { formatPrice } from "@/lib/utils"
 import {
   ArrowDown,
@@ -10,106 +11,121 @@ import {
   ShoppingCart,
   Users,
 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
-const stats = [
-  {
-    title: "Vendas Totais",
-    value: "R$ 45.231,89",
-    icon: DollarSign,
-    change: {
-      value: "12%",
-      positive: true,
-    },
-  },
-  {
-    title: "Pedidos",
-    value: "356",
-    icon: ShoppingCart,
-    change: {
-      value: "8%",
-      positive: true,
-    },
-  },
-  {
-    title: "Clientes",
-    value: "2,345",
-    icon: Users,
-    change: {
-      value: "5%",
-      positive: true,
-    },
-  },
-  {
-    title: "Produtos",
-    value: "789",
-    icon: Package,
-    change: {
-      value: "3%",
-      positive: false,
-    },
-  },
-]
+interface DashboardStats {
+  totalSales: number
+  totalOrders: number
+  totalCustomers: number
+  totalProducts: number
+  salesChange: number
+  ordersChange: number
+  customersChange: number
+  productsChange: number
+}
 
-const recentOrders = [
-  {
-    id: "1",
-    customer: "Maria Silva",
-    date: "2024-01-02",
-    status: "Pendente",
-    total: 299.99,
-  },
-  {
-    id: "2",
-    customer: "João Santos",
-    date: "2024-01-02",
-    status: "Pago",
-    total: 459.99,
-  },
-  {
-    id: "3",
-    customer: "Ana Oliveira",
-    date: "2024-01-01",
-    status: "Enviado",
-    total: 189.99,
-  },
-  {
-    id: "4",
-    customer: "Pedro Costa",
-    date: "2024-01-01",
-    status: "Entregue",
-    total: 749.99,
-  },
-]
+interface RecentOrder {
+  id: string
+  customer: string
+  date: string
+  status: string
+  total: number
+}
 
-const topProducts = [
-  {
-    name: "Colar Elegance",
-    sales: 124,
-    revenue: 24800,
-  },
-  {
-    name: "Anel Glamour",
-    sales: 98,
-    revenue: 14700,
-  },
-  {
-    name: "Brinco Crystal",
-    sales: 85,
-    revenue: 12750,
-  },
-  {
-    name: "Pulseira Divine",
-    sales: 72,
-    revenue: 10800,
-  },
-]
+interface TopProduct {
+  name: string
+  sales: number
+  revenue: number
+}
 
 export default function AdminDashboard() {
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([])
+  const [topProducts, setTopProducts] = useState<TopProduct[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        const [statsRes, ordersRes, productsRes] = await Promise.all([
+          fetch("/api/admin/stats"),
+          fetch("/api/admin/recent-orders"),
+          fetch("/api/admin/top-products"),
+        ])
+
+        if (!statsRes.ok || !ordersRes.ok || !productsRes.ok) {
+          throw new Error("Falha ao carregar dados do dashboard")
+        }
+
+        const [statsData, ordersData, productsData] = await Promise.all([
+          statsRes.json(),
+          ordersRes.json(),
+          productsRes.json(),
+        ])
+
+        setStats(statsData)
+        setRecentOrders(ordersData)
+        setTopProducts(productsData)
+      } catch (error) {
+        toast.error("Erro ao carregar dados do dashboard")
+        console.error(error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+  }, [])
+
+  if (isLoading) {
+    return <Loading />
+  }
+
+  const statsCards = [
+    {
+      title: "Vendas Totais",
+      value: formatPrice(stats?.totalSales || 0),
+      icon: DollarSign,
+      change: {
+        value: `${stats?.salesChange || 0}%`,
+        positive: (stats?.salesChange || 0) > 0,
+      },
+    },
+    {
+      title: "Pedidos",
+      value: stats?.totalOrders.toString() || "0",
+      icon: ShoppingCart,
+      change: {
+        value: `${stats?.ordersChange || 0}%`,
+        positive: (stats?.ordersChange || 0) > 0,
+      },
+    },
+    {
+      title: "Clientes",
+      value: stats?.totalCustomers.toString() || "0",
+      icon: Users,
+      change: {
+        value: `${stats?.customersChange || 0}%`,
+        positive: (stats?.customersChange || 0) > 0,
+      },
+    },
+    {
+      title: "Produtos",
+      value: stats?.totalProducts.toString() || "0",
+      icon: Package,
+      change: {
+        value: `${stats?.productsChange || 0}%`,
+        positive: (stats?.productsChange || 0) > 0,
+      },
+    },
+  ]
+
   return (
     <div className="space-y-8">
       {/* Stats Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
+        {statsCards.map((stat) => {
           const Icon = stat.icon
           return (
             <Card key={stat.title} className="p-6">
@@ -162,16 +178,22 @@ export default function AdminDashboard() {
                   <p className="font-medium">{formatPrice(order.total)}</p>
                   <p
                     className={`text-sm ${
-                      order.status === "Pendente"
+                      order.status === "PENDING"
                         ? "text-yellow-500"
-                        : order.status === "Pago"
+                        : order.status === "PAID"
                         ? "text-green-500"
-                        : order.status === "Enviado"
+                        : order.status === "SHIPPED"
                         ? "text-blue-500"
                         : "text-gray-500"
                     }`}
                   >
-                    {order.status}
+                    {order.status === "PENDING"
+                      ? "Pendente"
+                      : order.status === "PAID"
+                      ? "Pago"
+                      : order.status === "SHIPPED"
+                      ? "Enviado"
+                      : "Entregue"}
                   </p>
                 </div>
               </div>

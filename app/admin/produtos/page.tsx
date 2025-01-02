@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -13,8 +13,11 @@ import {
 import { ProductForm } from "@/components/product/product-form"
 import { DataTable } from "@/components/ui/data-table"
 import { columns } from "./columns"
-import { products } from "@/data/products"
 import { Product } from "@/types"
+import { Loading } from "@/components/ui/loading"
+import { toast } from "sonner"
+import { Input } from "@/components/ui/input"
+import { Search } from "lucide-react"
 
 type ProductFormData = Omit<Product, 'price' | 'salePrice'> & {
   price: string;
@@ -24,24 +27,70 @@ type ProductFormData = Omit<Product, 'price' | 'salePrice'> & {
 export default function ProductsPage() {
   const [open, setOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<ProductFormData | null>(null)
+  const [products, setProducts] = useState<Product[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [search, setSearch] = useState("")
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
 
-  const handleProductSubmit = (data: any) => {
-    const product = {
-      ...data,
-      price: Number(data.price),
-      salePrice: data.salePrice ? Number(data.salePrice) : undefined,
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  useEffect(() => {
+    const filtered = products.filter(product =>
+      product.name.toLowerCase().includes(search.toLowerCase()) ||
+      product.description.toLowerCase().includes(search.toLowerCase()) ||
+      product.category.toLowerCase().includes(search.toLowerCase())
+    )
+    setFilteredProducts(filtered)
+  }, [search, products])
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("/api/products")
+      if (!response.ok) {
+        throw new Error("Falha ao carregar produtos")
+      }
+      const data = await response.json()
+      setProducts(data)
+      setFilteredProducts(data)
+    } catch (error) {
+      toast.error("Erro ao carregar produtos")
+      console.error(error)
+    } finally {
+      setIsLoading(false)
     }
+  }
 
-    if (selectedProduct) {
-      // Editar produto existente
-      console.log("Produto editado:", { ...selectedProduct, ...product })
-    } else {
-      // Criar novo produto
-      console.log("Novo produto:", product)
+  const handleProductSubmit = async (data: any) => {
+    try {
+      const product = {
+        ...data,
+        price: Number(data.price),
+        salePrice: data.salePrice ? Number(data.salePrice) : undefined,
+      }
+
+      const response = await fetch("/api/products" + (selectedProduct ? `/${selectedProduct.id}` : ""), {
+        method: selectedProduct ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      })
+
+      if (!response.ok) {
+        throw new Error("Falha ao salvar produto")
+      }
+
+      toast.success(selectedProduct ? "Produto atualizado com sucesso" : "Produto criado com sucesso")
+      fetchProducts()
+    } catch (error) {
+      toast.error("Erro ao salvar produto")
+      console.error(error)
+    } finally {
+      setOpen(false)
+      setSelectedProduct(null)
     }
-
-    setOpen(false)
-    setSelectedProduct(null)
   }
 
   const onEdit = (product: Product) => {
@@ -54,20 +103,59 @@ export default function ProductsPage() {
     setOpen(true)
   }
 
-  const onDuplicate = (product: Product) => {
-    const duplicatedProduct = {
-      ...product,
-      id: Math.random().toString(36).substr(2, 9),
-      name: `${product.name} (Cópia)`,
-      slug: `${product.slug}-copia`,
+  const onDuplicate = async (product: Product) => {
+    try {
+      const duplicatedProduct = {
+        ...product,
+        id: undefined,
+        name: `${product.name} (Cópia)`,
+        slug: `${product.slug}-copia`,
+      }
+
+      const response = await fetch("/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(duplicatedProduct),
+      })
+
+      if (!response.ok) {
+        throw new Error("Falha ao duplicar produto")
+      }
+
+      toast.success("Produto duplicado com sucesso")
+      fetchProducts()
+    } catch (error) {
+      toast.error("Erro ao duplicar produto")
+      console.error(error)
     }
-    console.log("Produto duplicado:", duplicatedProduct)
   }
 
-  const onDelete = (product: Product) => {
-    if (confirm(`Tem certeza que deseja excluir o produto "${product.name}"?`)) {
-      console.log("Produto excluído:", product)
+  const onDelete = async (product: Product) => {
+    if (!confirm(`Tem certeza que deseja excluir o produto "${product.name}"?`)) {
+      return
     }
+
+    try {
+      const response = await fetch(`/api/products/${product.id}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Falha ao excluir produto")
+      }
+
+      toast.success("Produto excluído com sucesso")
+      fetchProducts()
+    } catch (error) {
+      toast.error("Erro ao excluir produto")
+      console.error(error)
+    }
+  }
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (
@@ -102,9 +190,19 @@ export default function ProductsPage() {
         </Dialog>
       </div>
 
+      <div className="relative mb-4">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          placeholder="Buscar produtos..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-10"
+        />
+      </div>
+
       <DataTable 
         columns={columns} 
-        data={products} 
+        data={filteredProducts} 
         onEdit={onEdit}
         onDuplicate={onDuplicate}
         onDelete={onDelete}

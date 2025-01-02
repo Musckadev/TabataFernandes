@@ -1,0 +1,290 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(STAFF)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orderHistories OrderHistory[]
+  activityLogs   ActivityLog[]
+
+  @@map("users")
+}
+
+model Product {
+  id           String   @id @default(uuid())
+  name         String
+  description  String   @db.Text
+  price        Decimal  @db.Decimal(10, 2)
+  salePrice    Decimal? @db.Decimal(10, 2) @map("sale_price")
+  category     String
+  collection   String
+  material     String
+  stockQuantity Int     @default(0) @map("stock_quantity")
+  inStock      Boolean  @default(true) @map("in_stock")
+  isNew        Boolean  @default(false) @map("is_new")
+  isSale       Boolean  @default(false) @map("is_sale")
+  featured     Boolean  @default(false)
+  slug         String   @unique
+  rating       Decimal? @db.Decimal(2, 1)
+  reviewsCount Int      @default(0) @map("reviews_count")
+  soldCount    Int      @default(0) @map("sold_count")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  images     ProductImage[]
+  sizes      ProductSize[]
+  stones     ProductStone[]
+  reviews    Review[]
+  orderItems OrderItem[]
+
+  @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  productId String   @map("product_id")
+  url       String
+  position  Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model ProductSize {
+  id            String   @id @default(uuid())
+  productId     String   @map("product_id")
+  size          String
+  stockQuantity Int      @default(0) @map("stock_quantity")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_sizes")
+}
+
+model ProductStone {
+  id        String   @id @default(uuid())
+  productId String   @map("product_id")
+  stone     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_stones")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  productId String   @map("product_id")
+  name      String
+  email     String
+  rating    Int
+  comment   String?  @db.Text
+  status    Status   @default(PENDING)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("reviews")
+}
+
+model Order {
+  id              String    @id @default(uuid())
+  customerName    String    @map("customer_name")
+  customerEmail   String    @map("customer_email")
+  customerPhone   String    @map("customer_phone")
+  shippingAddress String    @map("shipping_address") @db.Text
+  shippingCity    String    @map("shipping_city")
+  shippingState   String    @map("shipping_state")
+  shippingZip     String    @map("shipping_zip")
+  subtotal        Decimal   @db.Decimal(10, 2)
+  shippingFee     Decimal   @db.Decimal(10, 2) @map("shipping_fee")
+  total           Decimal   @db.Decimal(10, 2)
+  status          OrderStatus @default(PENDING)
+  paymentMethod   String    @map("payment_method")
+  paymentStatus   PaymentStatus @default(PENDING) @map("payment_status")
+  trackingCode    String?   @map("tracking_code")
+  notes           String?   @db.Text
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  items    OrderItem[]
+  history  OrderHistory[]
+
+  @@index([customerEmail])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String   @map("order_id")
+  productId String   @map("product_id")
+  quantity  Int
+  price     Decimal  @db.Decimal(10, 2)
+  total     Decimal  @db.Decimal(10, 2)
+  size      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model OrderHistory {
+  id        String    @id @default(uuid())
+  orderId   String    @map("order_id")
+  status    OrderStatus
+  notes     String?   @db.Text
+  createdBy String    @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@map("order_history")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?   @db.Text
+  parentId    String?   @map("parent_id")
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  parent   Category?  @relation("CategoryToCategory", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryToCategory")
+
+  @@index([parentId])
+  @@index([slug])
+  @@map("categories")
+}
+
+model Collection {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?  @db.Text
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@map("collections")
+}
+
+model Material {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?  @db.Text
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("materials")
+}
+
+model Stone {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?  @db.Text
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("stones")
+}
+
+model Setting {
+  id          String    @id @default(uuid())
+  key         String    @unique
+  value       String    @db.Text
+  type        SettingType @default(STRING)
+  description String?   @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
+
+model ActivityLog {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  details    Json?
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent") @db.Text
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum SettingType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+}

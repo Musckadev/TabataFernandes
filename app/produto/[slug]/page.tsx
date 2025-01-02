@@ -10,6 +10,7 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
+import { Product } from "@/types"
 
 interface ProductPageProps {
   params: {
@@ -28,14 +29,8 @@ export default function ProductPage({ params }: ProductPageProps) {
   }
 
   const handleAddToCart = () => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      slug: product.slug,
-      images: product.images,
-      price: product.price,
-      salePrice: product.salePrice
-    })
+    addToCart(product)
+    toast.success("Produto adicionado ao carrinho")
   }
 
   return (
@@ -107,19 +102,40 @@ export default function ProductPage({ params }: ProductPageProps) {
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              <Button onClick={handleAddToCart} className="flex-1">
-                <ShoppingCart className="mr-2 h-4 w-4" />
-                Adicionar ao carrinho
+              <Button
+                onClick={handleAddToCart}
+                className="flex-1 gap-2"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                Adicionar ao Carrinho
               </Button>
             </div>
 
-            <div className="mt-4 flex items-center gap-4">
-              <Button variant="outline" size="icon">
-                <Heart className="h-4 w-4" />
+            <div className="mt-4 flex gap-4">
+              <Button variant="outline" className="flex-1 gap-2">
+                <Heart className="h-5 w-5" />
+                Adicionar aos Favoritos
               </Button>
               <Button variant="outline" size="icon">
-                <Share2 className="h-4 w-4" />
+                <Share2 className="h-5 w-5" />
               </Button>
+            </div>
+          </div>
+
+          <Separator className="my-8" />
+
+          {/* Product metadata */}
+          <div className="mt-8">
+            <div className="prose prose-sm">
+              <h3>Detalhes do Produto</h3>
+              <ul>
+                <li>Material: {product.material}</li>
+                <li>Coleção: {product.collection}</li>
+                <li>Categoria: {product.category}</li>
+                {product.stones && product.stones.length > 0 && (
+                  <li>Pedras: {product.stones.join(", ")}</li>
+                )}
+              </ul>
             </div>
           </div>
         </div>
