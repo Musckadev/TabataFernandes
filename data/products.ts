@@ -14,6 +14,8 @@ export interface Product {
   salePrice?: number
   rating: number
   reviews: number
+  stock?: number
+  soldCount?: number
 }
 
 export const products: Product[] = [
