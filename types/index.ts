@@ -17,4 +17,6 @@ export interface Product {
   stones?: string[]
   rating?: number
   reviews?: number
+  soldCount?: number
+  createdAt?: string
 }
