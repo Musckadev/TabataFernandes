@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server"
 import { query, QueryResult } from "@/lib/db"
+import { z } from "zod"
 
-interface StockProduct {
-  inStock: boolean;
-  stockQuantity: number;
-}
+const stockSchema = z.object({
+  inStock: z.boolean(),
+  stockQuantity: z.number().min(0)
+})
+
+type StockProduct = z.infer<typeof stockSchema>
 
 export async function GET(
   request: Request,
@@ -25,12 +28,20 @@ export async function GET(
       )
     }
 
+    const validatedStock = stockSchema.parse(product)
+
     return NextResponse.json({
-      inStock: product.inStock,
-      availableQuantity: product.stockQuantity || 0
+      inStock: validatedStock.inStock,
+      availableQuantity: validatedStock.stockQuantity
     })
   } catch (error) {
     console.error("Database error:", error)
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: "Invalid stock data format" },
+        { status: 500 }
+      )
+    }
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

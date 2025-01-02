@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { query, insertQuery } from "@/lib/db"
 import { productSchema } from "@/lib/validations"
 import { Product } from "@/types"
+import { ZodError } from "zod"
 
 export async function GET() {
   try {
@@ -54,7 +55,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ id: result.insertId }, { status: 201 })
   } catch (error) {
     console.error("API error:", error)
-    if (error.name === "ZodError") {
+    if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation Error", details: error.errors },
         { status: 400 }
