@@ -1,16 +1,23 @@
 import { NextResponse } from "next/server"
-import { query } from "@/lib/db"
+import { query, QueryResult } from "@/lib/db"
+
+interface StockProduct {
+  inStock: boolean;
+  stockQuantity: number;
+}
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const [product] = await query(
+    const products = await query<StockProduct>(
       "SELECT inStock, stockQuantity FROM products WHERE id = ?",
       [params.id]
     )
 
+    const product = products[0]
+    
     if (!product) {
       return NextResponse.json(
         { error: "Product not found" },

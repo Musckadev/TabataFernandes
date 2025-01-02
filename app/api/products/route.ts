@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server"
-import { query } from "@/lib/db"
+import { query, insertQuery } from "@/lib/db"
 import { productSchema } from "@/lib/validations"
+import { Product } from "@/types"
 
 export async function GET() {
   try {
-    const products = await query("SELECT * FROM products")
+    const products = await query<Product>("SELECT * FROM products")
     return NextResponse.json(products)
   } catch (error) {
     console.error("Database error:", error)
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const validatedData = productSchema.parse(body)
     
-    const result = await query(
+    const result = await insertQuery(
       `INSERT INTO products (
         name, description, price, salePrice, category,
         collection, material, images, inStock, isNew,
@@ -50,7 +51,7 @@ export async function POST(request: Request) {
       ]
     )
     
-    return NextResponse.json(result, { status: 201 })
+    return NextResponse.json({ id: result.insertId }, { status: 201 })
   } catch (error) {
     console.error("API error:", error)
     if (error.name === "ZodError") {

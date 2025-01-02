@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ProductDetails } from "@/components/product/product-details"
 import { notFound } from "next/navigation"
-import { products } from "@/data/products"
+import { query } from "@/lib/db"
 import type { Product } from "@/types"
 
 interface ProductPageProps {
@@ -12,9 +12,22 @@ interface ProductPageProps {
     slug: string
   }
 }
-/* Testando a funcao */
-export default function ProductPage({ params }: ProductPageProps) {
-  const product = products.find((p) => p.slug === params.slug)
+
+async function getProduct(slug: string): Promise<Product | null> {
+  try {
+    const products = await query<Product>(
+      "SELECT * FROM products WHERE slug = ?",
+      [slug]
+    )
+    return products[0] || null
+  } catch (error) {
+    console.error("Error fetching product:", error)
+    return null
+  }
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
+  const product = await getProduct(params.slug)
 
   if (!product) {
     notFound()
@@ -32,15 +45,19 @@ export default function ProductPage({ params }: ProductPageProps) {
                 alt={product.name}
                 fill
                 className="object-cover"
+                priority
               />
             </div>
           )}
           <div className="grid grid-cols-4 gap-4">
-            {product.images.map((image, index) => (
-              <div key={index} className="relative aspect-square cursor-pointer overflow-hidden rounded-md border hover:border-primary">
+            {product.images.slice(1).map((image, index) => (
+              <div
+                key={index}
+                className="relative aspect-square overflow-hidden rounded-lg border"
+              >
                 <Image
                   src={image}
-                  alt={`${product.name} ${index + 1}`}
+                  alt={`${product.name} - Imagem ${index + 2}`}
                   fill
                   className="object-cover"
                 />
@@ -49,39 +66,64 @@ export default function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
 
-        {/* Informações do Produto */}
+        {/* Detalhes do Produto */}
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold">{product.name}</h1>
-            <div className="mt-2 flex items-center gap-4">
-              {product.rating && (
-                <div className="flex items-center">
-                  <Star className="h-5 w-5 fill-primary text-primary" />
-                  <span className="ml-1 font-medium">{product.rating}</span>
-                  {product.reviews && (
-                    <span className="ml-1 text-muted-foreground">
-                      ({product.reviews} avaliações)
-                    </span>
-                  )}
-                </div>
-              )}
-              <Badge>{product.category}</Badge>
+            <div className="mt-2 flex items-center gap-2">
+              <div className="flex items-center">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-5 w-5 ${
+                      i < (product.rating || 0)
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "fill-gray-200 text-gray-200"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-gray-600">
+                ({product.reviews || 0} avaliações)
+              </span>
             </div>
           </div>
 
           <div className="space-y-2">
-            <p className="text-3xl font-bold">
-              {new Intl.NumberFormat('pt-BR', { 
-                style: 'currency', 
-                currency: 'BRL' 
+            <p className="text-2xl font-bold text-primary">
+              {new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
               }).format(product.price)}
             </p>
-            <p className="text-sm text-muted-foreground">
-              Em até 12x de {new Intl.NumberFormat('pt-BR', { 
-                style: 'currency', 
-                currency: 'BRL' 
-              }).format(product.price / 12)}
-            </p>
+            {product.salePrice && (
+              <p className="text-sm text-gray-500 line-through">
+                {new Intl.NumberFormat("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                }).format(product.salePrice)}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Truck className="h-5 w-5 text-primary" />
+              <span className="text-sm">Frete grátis para todo o Brasil</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              <span className="text-sm">Garantia de 30 dias</span>
+            </div>
+          </div>
+
+          <div className="space-x-2">
+            {product.isNew && (
+              <Badge variant="secondary">Novo</Badge>
+            )}
+            {product.isSale && (
+              <Badge variant="destructive">Promoção</Badge>
+            )}
           </div>
 
           <ProductDetails product={product} />
@@ -91,9 +133,14 @@ export default function ProductPage({ params }: ProductPageProps) {
   )
 }
 
-// Generate static params for all products
 export async function generateStaticParams() {
-  return products.map((product) => ({
-    slug: product.slug,
-  }))
+  try {
+    const products = await query<Product>("SELECT slug FROM products")
+    return products.map((product) => ({
+      slug: product.slug,
+    }))
+  } catch (error) {
+    console.error("Error generating static params:", error)
+    return []
+  }
 }
