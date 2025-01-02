@@ -7,6 +7,7 @@ import { HeroCarousel } from "@/components/home/hero-carousel"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
+import { products } from "@/data/products"
 
 export default function Home() {
   return (
@@ -101,66 +102,9 @@ export default function Home() {
           </Button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <ProductCard
-            product={{
-              id: "1",
-              name: "Colar Banhado a Ouro com Zircônia",
-              price: 159.99,
-              images: ["https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f"],
-              category: "Colares",
-              rating: 4.8,
-              description: "Colar delicado banhado a ouro 18k com pingente cravejado em zircônia",
-              material: "Banho de Ouro 18k",
-              stones: "Zircônia",
-              reviews: 28,
-              isNew: true
-            }}
-          />
-          <ProductCard
-            product={{
-              id: "5",
-              name: "Conjunto Elegance",
-              price: 299.99,
-              images: ["https://images.unsplash.com/photo-1603561591411-07134e71a2a9"],
-              category: "Conjuntos",
-              rating: 5.0,
-              description: "Conjunto de colar e brincos com zircônias e banho de ouro rosé",
-              material: "Banho de Ouro Rosé",
-              stones: "Zircônia",
-              reviews: 12,
-              isNew: true
-            }}
-          />
-          <ProductCard
-            product={{
-              id: "6",
-              name: "Bracelete Infinito",
-              price: 129.99,
-              images: ["https://images.unsplash.com/photo-1573408301185-9146fe634ad0"],
-              category: "Pulseiras",
-              rating: 4.9,
-              description: "Bracelete ajustável com design infinito e acabamento em ródio",
-              material: "Ródio",
-              stones: "Cristal",
-              reviews: 8,
-              isNew: true
-            }}
-          />
-          <ProductCard
-            product={{
-              id: "7",
-              name: "Brinco Cascata",
-              price: 179.99,
-              images: ["https://images.unsplash.com/photo-1635767798638-3665c671c0bb"],
-              category: "Brincos",
-              rating: 4.7,
-              description: "Brinco longo estilo cascata com zircônias e banho de ouro",
-              material: "Banho de Ouro 18k",
-              stones: "Zircônia",
-              reviews: 15,
-              isNew: true
-            }}
-          />
+          {products.slice(0, 4).map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </section>
 
