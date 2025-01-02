@@ -79,7 +79,7 @@
     --ring: 152 15% 55%;
   }
 }
-
+ 
 @layer base {
   * {
     @apply border-border;
@@ -89,51 +89,52 @@
   }
 }
 
-/* Estilos personalizados */
-.btn-primary {
-  @apply bg-primary hover:bg-primary-dark text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200;
-}
+@layer components {
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2 px-4 rounded-md transition-colors duration-200;
+  }
 
-.btn-secondary {
-  @apply bg-secondary hover:bg-secondary-dark text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200;
-}
+  .btn-secondary {
+    @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold py-2 px-4 rounded-md transition-colors duration-200;
+  }
 
-.btn-accent {
-  @apply bg-accent hover:bg-accent-dark text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200;
-}
+  .btn-accent {
+    @apply bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-2 px-4 rounded-md transition-colors duration-200;
+  }
 
-.btn-outline {
-  @apply border-2 border-primary hover:bg-primary hover:text-white text-primary font-semibold py-2 px-4 rounded-md transition-colors duration-200;
-}
+  .btn-outline {
+    @apply border-2 border-primary hover:bg-primary/10 text-primary font-semibold py-2 px-4 rounded-md transition-colors duration-200;
+  }
 
-.input-primary {
-  @apply border-2 border-neutral-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-md px-3 py-2 outline-none transition-colors duration-200;
-}
+  .input-primary {
+    @apply border-2 border-neutral-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-md px-3 py-2 outline-none transition-colors duration-200;
+  }
 
-.card {
-  @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
-}
+  .card {
+    @apply bg-card text-card-foreground rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
+  }
 
-.badge {
-  @apply inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary-dark transition-colors hover:bg-primary/20;
-}
+  .badge {
+    @apply inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20;
+  }
 
-.badge-secondary {
-  @apply inline-flex items-center rounded-full bg-secondary/10 px-2.5 py-0.5 text-xs font-medium text-secondary-dark transition-colors hover:bg-secondary/20;
-}
+  .badge-secondary {
+    @apply inline-flex items-center rounded-full bg-secondary/10 px-2.5 py-0.5 text-xs font-medium text-secondary transition-colors hover:bg-secondary/20;
+  }
 
-.badge-accent {
-  @apply inline-flex items-center rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent-dark transition-colors hover:bg-accent/20;
-}
+  .badge-accent {
+    @apply inline-flex items-center rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent transition-colors hover:bg-accent/20;
+  }
 
-.link {
-  @apply text-primary hover:text-primary-dark underline-offset-4 hover:underline transition-colors duration-200;
-}
+  .link {
+    @apply text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors duration-200;
+  }
 
-.nav-link {
-  @apply text-neutral-600 hover:text-primary transition-colors duration-200;
-}
+  .nav-link {
+    @apply text-muted-foreground hover:text-primary transition-colors duration-200;
+  }
 
-.active-nav-link {
-  @apply text-primary font-medium;
+  .active-nav-link {
+    @apply text-primary font-medium;
+  }
 }
