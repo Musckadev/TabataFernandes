@@ -50,7 +50,7 @@ export default function CheckoutPage() {
   const [isLoadingCep, setIsLoadingCep] = useState(false)
   const [step, setStep] = useState<'personal' | 'shipping' | 'payment'>('personal')
   const [addressData, setAddressData] = useState<any>(null)
-  const [selectedPayment, setSelectedPayment] = useState<string | null>(null)
+  const [selectedPayment, setSelectedPayment] = useState<string>("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -163,7 +163,7 @@ export default function CheckoutPage() {
         return showShippingOptions && (subtotal >= 299 || selectedShipping) &&
                formData.street && formData.number && formData.neighborhood && formData.city && formData.state
       case 'payment':
-        return selectedPayment !== null
+        return selectedPayment !== ""
       default:
         return true
     }
