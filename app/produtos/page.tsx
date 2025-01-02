@@ -95,7 +95,9 @@ export default function ProductsPage() {
         case "best-sellers":
           return (b.soldCount || 0) - (a.soldCount || 0)
         default:
-          return b.id - a.id // newest first
+          // Para ordenar por mais recentes, vamos usar a ordem natural dos produtos
+          // assumindo que os produtos mais recentes estão no início do array
+          return 0
       }
     })
 
