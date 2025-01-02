@@ -153,7 +153,7 @@ export default function ProductsPage() {
                     )}
                   </div>
                 </TableCell>
-                <TableCell>{product.stock || "Em Estoque"}</TableCell>
+                <TableCell>{product.stock ? product.stock : "Em Estoque"}</TableCell>
                 <TableCell>{product.soldCount || 0}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">

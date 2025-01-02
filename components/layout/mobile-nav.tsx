@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Package, Grid, Tag, BookOpen, Mail, User } from "lucide-react"
+import { Home, Package, Grid, Tag, BookOpen, Mail, User, Menu } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -16,29 +16,34 @@ const items = [
     icon: Home,
   },
   {
-    title: "Produtos",
-    href: "/produtos",
+    title: "Lançamentos",
+    href: "/lancamentos",
     icon: Package,
   },
   {
-    title: "Categorias",
-    href: "/categorias",
+    title: "Colares",
+    href: "/colares",
     icon: Grid,
   },
   {
-    title: "Ofertas",
-    href: "/ofertas",
+    title: "Brincos",
+    href: "/brincos",
+    icon: Grid,
+  },
+  {
+    title: "Anéis",
+    href: "/aneis",
+    icon: Grid,
+  },
+  {
+    title: "Pulseiras",
+    href: "/pulseiras",
+    icon: Grid,
+  },
+  {
+    title: "Promoções",
+    href: "/promocoes",
     icon: Tag,
-  },
-  {
-    title: "Blog",
-    href: "/blog",
-    icon: BookOpen,
-  },
-  {
-    title: "Contato",
-    href: "/contact",
-    icon: Mail,
   },
 ]
 

@@ -11,27 +11,27 @@ const items = [
   },
   {
     title: "Lançamentos",
-    href: "/produtos?tipo=lancamentos",
+    href: "/lancamentos",
   },
   {
     title: "Colares",
-    href: "/produtos?categoria=colares",
+    href: "/colares",
   },
   {
     title: "Brincos",
-    href: "/produtos?categoria=brincos",
+    href: "/brincos",
   },
   {
     title: "Anéis",
-    href: "/produtos?categoria=aneis",
+    href: "/aneis",
   },
   {
     title: "Pulseiras",
-    href: "/produtos?categoria=pulseiras",
+    href: "/pulseiras",
   },
   {
     title: "Promoções",
-    href: "/produtos?tipo=promocoes",
+    href: "/promocoes",
   },
 ]
 
