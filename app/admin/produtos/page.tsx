@@ -39,7 +39,12 @@ export default function ProductsPage() {
   }
 
   const handleEdit = (product: Product) => {
-    setSelectedProduct(product)
+    const formattedProduct = {
+      ...product,
+      price: product.price.toString(),
+      salePrice: product.salePrice?.toString(),
+    }
+    setSelectedProduct(formattedProduct as Product)
     setOpen(true)
   }
 
