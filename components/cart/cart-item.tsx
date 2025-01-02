@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Minus, Plus, Trash2 } from "lucide-react"
 import Image from "next/image"
 import { useCart } from "@/components/cart/cart-context"
-import { Product } from "@/data/products"
+import { Product } from "@/types"
 
 interface CartItemProps {
   item: Product & { quantity: number }
