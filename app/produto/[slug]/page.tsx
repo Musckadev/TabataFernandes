@@ -34,8 +34,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       slug: product.slug,
       images: product.images,
       price: product.price,
-      salePrice: product.salePrice,
-      quantity: quantity
+      salePrice: product.salePrice
     })
   }
 
@@ -99,9 +98,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
-                <span className="w-12 text-center text-lg font-medium">
-                  {quantity}
-                </span>
+                <span className="w-12 text-center">{quantity}</span>
                 <Button
                   variant="outline"
                   size="icon"
@@ -110,49 +107,20 @@ export default function ProductPage({ params }: ProductPageProps) {
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-
-              <Button
-                size="lg"
-                className="flex-1"
-                onClick={handleAddToCart}
-              >
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Adicionar ao Carrinho
+              <Button onClick={handleAddToCart} className="flex-1">
+                <ShoppingCart className="mr-2 h-4 w-4" />
+                Adicionar ao carrinho
               </Button>
             </div>
 
-            <div className="mt-4 flex gap-4">
-              <Button variant="outline" size="lg" className="flex-1">
-                <Heart className="mr-2 h-5 w-5" />
-                Favoritar
+            <div className="mt-4 flex items-center gap-4">
+              <Button variant="outline" size="icon">
+                <Heart className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="lg" className="flex-1">
-                <Share2 className="mr-2 h-5 w-5" />
-                Compartilhar
+              <Button variant="outline" size="icon">
+                <Share2 className="h-4 w-4" />
               </Button>
             </div>
-          </div>
-
-          <Separator className="my-8" />
-
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-sm font-medium text-gray-900">Detalhes</h2>
-              <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{product.details}</p>
-              </div>
-            </div>
-
-            {product.features && (
-              <div>
-                <h2 className="text-sm font-medium text-gray-900">
-                  Características
-                </h2>
-                <div className="mt-4 space-y-6">
-                  <p className="text-sm text-gray-600">{product.features}</p>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
