@@ -10,8 +10,8 @@ export type CartItem = Product & { quantity: number }
 interface CartContextType {
   items: CartItem[]
   addToCart: (product: Product) => void
-  removeFromCart: (product: Product) => void
-  updateQuantity: (product: Product, quantity: number) => void
+  removeFromCart: (productId: string) => void
+  updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
   subtotal: number
   shipping: number
@@ -63,7 +63,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       // Calcular subtotal e total
-      const newSubtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+      const newSubtotal = items.reduce((acc, item) => {
+        const price = item.salePrice || item.price
+        return acc + price * item.quantity
+      }, 0)
       setSubtotal(newSubtotal)
       setTotal(newSubtotal + shipping)
 
@@ -107,7 +110,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
         return [...currentItems, { ...product, quantity: 1 }]
       })
-      
+
       toast.success("Produto adicionado ao carrinho")
     } catch (error) {
       console.error("Error adding to cart:", error)
@@ -118,11 +121,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const removeFromCart = (product: Product) => {
+  const removeFromCart = (productId: string) => {
     try {
-      setItems(currentItems =>
-        currentItems.filter(item => item.id !== product.id)
-      )
+      setItems(currentItems => currentItems.filter(item => item.id !== productId))
       toast.success("Produto removido do carrinho")
     } catch (error) {
       console.error("Error removing from cart:", error)
@@ -131,21 +132,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const updateQuantity = async (product: Product, quantity: number) => {
+  const updateQuantity = async (productId: string, quantity: number) => {
     try {
       setIsLoading(true)
       setError(null)
 
-      if (quantity < 1) {
-        removeFromCart(product)
-        return
-      }
-
-      // Validar quantidade
-      cartItemSchema.parse({ productId: product.id, quantity })
-
       // Verificar estoque
-      const response = await fetch(`/api/products/${product.id}/stock`)
+      const response = await fetch(`/api/products/${productId}/stock`)
       const { inStock, availableQuantity } = await response.json()
 
       if (!inStock) {
@@ -157,15 +150,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         toast.error(`Apenas ${availableQuantity} unidades disponíveis`)
         return
       }
-      
+
       setItems(currentItems =>
         currentItems.map(item =>
-          item.id === product.id
+          item.id === productId
             ? { ...item, quantity }
             : item
         )
       )
-      toast.success("Quantidade atualizada")
     } catch (error) {
       console.error("Error updating quantity:", error)
       setError("Erro ao atualizar quantidade")
