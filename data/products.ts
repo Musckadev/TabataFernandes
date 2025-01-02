@@ -26,6 +26,7 @@ export interface Product {
   stock?: number
   soldCount?: number
   slug: string
+  collection?: string
 }
 
 export const products: Product[] = [
@@ -43,6 +44,7 @@ export const products: Product[] = [
     weight: "3.2g",
     reviews: 28,
     isNew: true,
+    collection: "lancamentos",
     slug: generateSlug("Colar Banhado a Ouro com Zircônia")
   },
   {
@@ -60,6 +62,7 @@ export const products: Product[] = [
     reviews: 15,
     isSale: true,
     salePrice: 69.99,
+    collection: "classicos",
     slug: generateSlug("Brinco Gota Cristal")
   },
   {
@@ -78,6 +81,7 @@ export const products: Product[] = [
     isNew: true,
     rating: 0,
     reviews: 0,
+    collection: "verao-2024",
     slug: generateSlug("Colar Veneziana Banhado a Ouro 18k")
   },
   {
@@ -95,25 +99,132 @@ export const products: Product[] = [
     isNew: true,
     rating: 0,
     reviews: 0,
+    collection: "festa",
     slug: generateSlug("Brinco Gota Cristal Zircônia")
   },
   {
     id: "anel-solitario-zirconia",
     name: "Anel Solitário com Zircônia",
-    description: "Anel solitário com pedra de zircônia central, design clássico e atemporal.",
+    description: "Anel solitário com zircônia central e acabamento em banho de ouro 18k.",
     price: 129.90,
-    salePrice: 99.90,
     images: [
-      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1605100804847-46a3b1917c2f?auto=format&fit=crop&q=80"
+      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80"
     ],
     category: "Anéis",
     material: "Banho de Ouro 18k",
     stones: "Zircônia",
-    isSale: true,
+    dimensions: "Aro 18",
+    weight: "2.5g",
+    rating: 5,
+    reviews: 3,
+    collection: "classicos",
+    slug: generateSlug("Anel Solitário com Zircônia")
+  },
+  {
+    id: "pulseira-elos-portuguesa",
+    name: "Pulseira Elos Portuguesa",
+    description: "Pulseira com elos estilo portuguesa, acabamento em banho de ouro 18k.",
+    price: 199.90,
+    images: [
+      "https://images.unsplash.com/photo-1611085583191-a3b181a88401?auto=format&fit=crop&q=80"
+    ],
+    category: "Pulseiras",
+    material: "Banho de Ouro 18k",
+    dimensions: "19cm",
+    weight: "4.8g",
+    isNew: true,
     rating: 0,
     reviews: 0,
-    slug: generateSlug("Anel Solitário com Zircônia")
+    collection: "verao-2024",
+    slug: generateSlug("Pulseira Elos Portuguesa")
+  },
+  {
+    id: "conjunto-colar-brinco-festa",
+    name: "Conjunto Colar e Brincos Festa",
+    description: "Conjunto elegante com colar e brincos cravejados em zircônia, ideal para festas.",
+    price: 299.90,
+    images: [
+      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80"
+    ],
+    category: "Conjuntos",
+    material: "Ródio",
+    stones: "Zircônia",
+    isSale: true,
+    salePrice: 249.90,
+    rating: 5,
+    reviews: 7,
+    collection: "festa",
+    slug: generateSlug("Conjunto Colar e Brincos Festa")
+  },
+  {
+    id: "anel-aparador-zirconia",
+    name: "Anel Aparador com Zircônias",
+    description: "Anel aparador cravejado com zircônias, perfeito para usar com solitários.",
+    price: 149.90,
+    images: [
+      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80"
+    ],
+    category: "Anéis",
+    material: "Banho de Ouro 18k",
+    stones: "Zircônia",
+    dimensions: "Aro 18",
+    weight: "2.2g",
+    rating: 4.5,
+    reviews: 4,
+    collection: "classicos",
+    slug: generateSlug("Anel Aparador com Zircônias")
+  },
+  {
+    id: "colar-choker-zirconia",
+    name: "Colar Choker com Zircônias",
+    description: "Colar estilo choker com zircônias, moderno e sofisticado.",
+    price: 199.90,
+    images: [
+      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1611591437277-308c3bca8b43?auto=format&fit=crop&q=80"
+    ],
+    category: "Colares",
+    material: "Banho de Ouro Rosé",
+    stones: "Zircônia",
+    dimensions: "35cm",
+    rating: 0,
+    reviews: 0,
+    collection: "festa",
+    slug: generateSlug("Colar Choker com Zircônias")
+  },
+  {
+    id: "brinco-argola-pequena",
+    name: "Brinco Argola Pequena",
+    description: "Brinco argola pequena, design minimalista e versátil para qualquer ocasião.",
+    price: 89.90,
+    images: [
+      "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&q=80"
+    ],
+    category: "Brincos",
+    material: "Banho de Ouro 18k",
+    isNew: true,
+    rating: 0,
+    reviews: 0,
+    collection: "lancamentos",
+    slug: generateSlug("Brinco Argola Pequena")
+  },
+  {
+    id: "anel-alianca-zirconia",
+    name: "Aliança com Zircônias",
+    description: "Aliança delicada com zircônias em toda volta, ideal para uso diário ou como anel de compromisso.",
+    price: 159.90,
+    images: [
+      "https://images.unsplash.com/photo-1595781572981-d63151b232ed?auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1595781572981-d63151b232ed?auto=format&fit=crop&q=80"
+    ],
+    category: "Anéis",
+    material: "Banho de Ouro 18k",
+    stones: "Zircônia",
+    rating: 0,
+    reviews: 0,
+    collection: "classicos",
+    slug: generateSlug("Aliança com Zircônias")
   },
   {
     id: "pulseira-tennis-zirconia",
@@ -130,6 +241,7 @@ export const products: Product[] = [
     dimensions: "18cm",
     rating: 0,
     reviews: 0,
+    collection: "festa",
     slug: generateSlug("Pulseira Tennis com Zircônias")
   },
   {
@@ -148,55 +260,7 @@ export const products: Product[] = [
     isSale: true,
     rating: 0,
     reviews: 0,
+    collection: "classicos",
     slug: generateSlug("Conjunto Colar e Brincos Pérola")
-  },
-  {
-    id: "anel-alianca-zirconia",
-    name: "Aliança com Zircônias",
-    description: "Aliança delicada com zircônias em toda volta, ideal para uso diário ou como anel de compromisso.",
-    price: 159.90,
-    images: [
-      "https://images.unsplash.com/photo-1595781572981-d63151b232ed?auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1595781572981-d63151b232ed?auto=format&fit=crop&q=80"
-    ],
-    category: "Anéis",
-    material: "Banho de Ouro 18k",
-    stones: "Zircônia",
-    rating: 0,
-    reviews: 0,
-    slug: generateSlug("Aliança com Zircônias")
-  },
-  {
-    id: "brinco-argola-pequena",
-    name: "Brinco Argola Pequena",
-    description: "Brinco argola pequena, design minimalista e versátil para qualquer ocasião.",
-    price: 89.90,
-    images: [
-      "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&q=80"
-    ],
-    category: "Brincos",
-    material: "Banho de Ouro 18k",
-    isNew: true,
-    rating: 0,
-    reviews: 0,
-    slug: generateSlug("Brinco Argola Pequena")
-  },
-  {
-    id: "colar-choker-zirconia",
-    name: "Colar Choker com Zircônias",
-    description: "Colar estilo choker com zircônias, moderno e sofisticado.",
-    price: 199.90,
-    images: [
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1611591437277-308c3bca8b43?auto=format&fit=crop&q=80"
-    ],
-    category: "Colares",
-    material: "Banho de Ouro Rosé",
-    stones: "Zircônia",
-    dimensions: "35cm",
-    rating: 0,
-    reviews: 0,
-    slug: generateSlug("Colar Choker com Zircônias")
   }
 ]
