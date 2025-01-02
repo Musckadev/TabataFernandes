@@ -1,3 +1,12 @@
+function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 export interface Product {
   id: string
   name: string
@@ -16,6 +25,7 @@ export interface Product {
   reviews: number
   stock?: number
   soldCount?: number
+  slug: string
 }
 
 export const products: Product[] = [
@@ -32,7 +42,8 @@ export const products: Product[] = [
     dimensions: "45cm + extensor de 5cm",
     weight: "3.2g",
     reviews: 28,
-    isNew: true
+    isNew: true,
+    slug: generateSlug("Colar Banhado a Ouro com Zircônia")
   },
   {
     id: "2",
@@ -48,7 +59,8 @@ export const products: Product[] = [
     weight: "2.8g",
     reviews: 15,
     isSale: true,
-    salePrice: 69.99
+    salePrice: 69.99,
+    slug: generateSlug("Brinco Gota Cristal")
   },
   {
     id: "colar-veneziana-ouro",
@@ -65,7 +77,8 @@ export const products: Product[] = [
     weight: "3.2g",
     isNew: true,
     rating: 0,
-    reviews: 0
+    reviews: 0,
+    slug: generateSlug("Colar Veneziana Banhado a Ouro 18k")
   },
   {
     id: "brinco-cristal-gota",
@@ -81,7 +94,8 @@ export const products: Product[] = [
     stones: "Zircônia",
     isNew: true,
     rating: 0,
-    reviews: 0
+    reviews: 0,
+    slug: generateSlug("Brinco Gota Cristal Zircônia")
   },
   {
     id: "anel-solitario-zirconia",
@@ -98,7 +112,8 @@ export const products: Product[] = [
     stones: "Zircônia",
     isSale: true,
     rating: 0,
-    reviews: 0
+    reviews: 0,
+    slug: generateSlug("Anel Solitário com Zircônia")
   },
   {
     id: "pulseira-tennis-zirconia",
@@ -114,7 +129,8 @@ export const products: Product[] = [
     stones: "Zircônia",
     dimensions: "18cm",
     rating: 0,
-    reviews: 0
+    reviews: 0,
+    slug: generateSlug("Pulseira Tennis com Zircônias")
   },
   {
     id: "conjunto-colar-brinco-perola",
@@ -131,7 +147,8 @@ export const products: Product[] = [
     stones: "Pérola",
     isSale: true,
     rating: 0,
-    reviews: 0
+    reviews: 0,
+    slug: generateSlug("Conjunto Colar e Brincos Pérola")
   },
   {
     id: "anel-alianca-zirconia",
@@ -146,7 +163,8 @@ export const products: Product[] = [
     material: "Banho de Ouro 18k",
     stones: "Zircônia",
     rating: 0,
-    reviews: 0
+    reviews: 0,
+    slug: generateSlug("Aliança com Zircônias")
   },
   {
     id: "brinco-argola-pequena",
@@ -161,7 +179,8 @@ export const products: Product[] = [
     material: "Banho de Ouro 18k",
     isNew: true,
     rating: 0,
-    reviews: 0
+    reviews: 0,
+    slug: generateSlug("Brinco Argola Pequena")
   },
   {
     id: "colar-choker-zirconia",
@@ -177,6 +196,7 @@ export const products: Product[] = [
     stones: "Zircônia",
     dimensions: "35cm",
     rating: 0,
-    reviews: 0
+    reviews: 0,
+    slug: generateSlug("Colar Choker com Zircônias")
   }
 ]
