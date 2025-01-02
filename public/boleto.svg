@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000px" height="400px" viewBox="0 0 1000 400" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#333333" x="50" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="100" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="150" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="200" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="250" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="300" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="350" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="400" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="450" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="500" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="550" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="600" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="650" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="700" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="750" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="800" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="850" y="100" width="30" height="200"></rect>
+        <rect fill="#333333" x="900" y="100" width="30" height="200"></rect>
+    </g>
+</svg>
