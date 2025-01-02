@@ -13,7 +13,7 @@ interface CartItemProps {
 }
 
 export function CartItem({ item }: CartItemProps) {
-  const { updateQuantity, removeItem } = useCart()
+  const { updateQuantity, removeFromCart } = useCart()
   const price = item.salePrice || item.price
 
   return (
@@ -39,7 +39,7 @@ export function CartItem({ item }: CartItemProps) {
               variant="ghost"
               size="icon"
               className="h-8 w-8"
-              onClick={() => removeItem(item.id)}
+              onClick={() => removeFromCart(item.id)}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
