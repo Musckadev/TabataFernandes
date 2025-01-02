@@ -41,9 +41,24 @@ systemctl start nginx
 systemctl enable nginx
 check_error "Falha ao iniciar/habilitar Nginx"
 
-# Configurar diretório da aplicação
+# Verificar e criar diretório da aplicação
 APP_DIR="/var/www/tabata"
-if [ -d "$APP_DIR" ]; then
+if [ ! -d "/var/www" ]; then
+    echo "Criando diretório /var/www..."
+    mkdir -p /var/www
+    chown -R www-data:www-data /var/www
+    chmod -R 755 /var/www
+fi
+
+if [ ! -d "$APP_DIR" ]; then
+    echo "Criando diretório $APP_DIR..."
+    mkdir -p $APP_DIR
+    chown -R www-data:www-data $APP_DIR
+    chmod -R 755 $APP_DIR
+fi
+
+# Configurar diretório da aplicação
+if [ -d "$APP_DIR/.git" ]; then
     echo "Atualizando repositório existente..."
     cd $APP_DIR
     # Fazer backup do .env se existir
@@ -52,6 +67,7 @@ if [ -d "$APP_DIR" ]; then
     fi
     # Parar a aplicação se estiver rodando
     pm2 stop tabata || true
+    pm2 delete tabata || true
     # Atualizar código
     git fetch origin main
     git reset --hard origin/main
@@ -62,14 +78,20 @@ if [ -d "$APP_DIR" ]; then
     fi
 else
     echo "Clonando repositório pela primeira vez..."
-    mkdir -p $APP_DIR
+    # Limpar diretório se existir
+    rm -rf $APP_DIR/*
     cd $APP_DIR
     git clone https://github.com/Musckadev/TabataFernandes.git .
     check_error "Falha ao clonar repositório"
 fi
 
+# Ajustar permissões
+chown -R www-data:www-data $APP_DIR
+chmod -R 755 $APP_DIR
+
 # Instalar dependências e fazer build
 echo "Instalando dependências..."
+cd $APP_DIR
 npm install
 check_error "Falha ao instalar dependências"
 
@@ -114,7 +136,7 @@ check_error "Falha ao recarregar Nginx"
 # Iniciar a aplicação com PM2
 cd $APP_DIR
 pm2 delete tabata || true
-pm2 start npm --name "tabata" -- start
+pm2 start ecosystem.config.js
 check_error "Falha ao iniciar aplicação com PM2"
 
 # Salvar configuração do PM2
@@ -124,5 +146,11 @@ check_error "Falha ao salvar configuração do PM2"
 # Configurar PM2 para iniciar no boot
 pm2 startup
 check_error "Falha ao configurar PM2 para iniciar no boot"
+
+# Mostrar status
+echo "Verificando status dos serviços..."
+systemctl status nginx
+pm2 list
+pm2 logs tabata --lines 50
 
 echo "Setup concluído com sucesso!"
