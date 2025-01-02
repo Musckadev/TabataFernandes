@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input"
 import { Facebook, Instagram, Twitter, ShieldCheck, Lock, Award } from "lucide-react"
 import Link from "next/link"
 
-export function Footer() {
+export default function Footer() {
   return (
-    <footer className="bg-white">
+    <footer className="bg-white border-t">
       {/* Security Seals */}
       <div className="border-t border-gray-200">
         <div className="container py-8">
@@ -146,7 +146,7 @@ export function Footer() {
           <div className="flex flex-col items-center gap-8 sm:flex-row sm:justify-between">
             {/* Copyright */}
             <p className="text-xs text-gray-500">
-              2024 Sua Loja. Todos os direitos reservados.
+              &copy; 2024 Tabata Fernandes. Todos os direitos reservados.
             </p>
 
             {/* Payment Methods */}
