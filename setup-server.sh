@@ -26,11 +26,11 @@ systemctl start nginx
 systemctl enable nginx
 
 # Criar diretório para a aplicação
-mkdir -p /var/www/loja
-cd /var/www/loja
+mkdir -p /var/www/tabata
+cd /var/www/tabata
 
 # Clonar o repositório
-git clone https://github.com/Musckadev/loja.git .
+git clone https://github.com/Musckadev/TabataFernandes.git .
 
 # Instalar dependências
 npm install
@@ -39,7 +39,7 @@ npm install
 npm run build
 
 # Configurar Nginx
-cat > /etc/nginx/sites-available/loja << 'EOL'
+cat > /etc/nginx/sites-available/tabata << 'EOL'
 server {
     listen 80;
     server_name _;
@@ -56,7 +56,7 @@ server {
 EOL
 
 # Ativar o site
-ln -sf /etc/nginx/sites-available/loja /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/tabata /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 
 # Testar configuração do Nginx
@@ -66,7 +66,7 @@ nginx -t
 systemctl restart nginx
 
 # Iniciar a aplicação com PM2
-cd /var/www/loja
-pm2 start npm --name "loja" -- start
+cd /var/www/tabata
+pm2 start npm --name "tabata" -- start
 pm2 save
 pm2 startup
