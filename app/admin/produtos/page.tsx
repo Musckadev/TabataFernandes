@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { ProductForm } from "@/components/product/product-form"
 import { DataTable } from "@/components/ui/data-table"
-import { columns } from "./columns"
+import { columns, type Product } from "./columns"
 import { products } from "@/data/products"
 
 export default function ProductsPage() {
