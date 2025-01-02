@@ -39,14 +39,11 @@ export default function ProductsPage() {
   }
 
   const handleEdit = (product: Product) => {
-    // Criamos um novo objeto mantendo os tipos originais
-    const formattedProduct = {
+    setSelectedProduct({
       ...product,
-      // Não convertemos para string aqui, mantemos como número
-      price: product.price,
-      salePrice: product.salePrice
-    }
-    setSelectedProduct(formattedProduct)
+      price: product.price.toString(),
+      salePrice: product.salePrice?.toString(),
+    })
     setOpen(true)
   }
 
@@ -93,7 +90,7 @@ export default function ProductsPage() {
             <div className="max-h-[calc(100vh-200px)] overflow-y-auto pr-6">
               <ProductForm 
                 onSubmit={handleProductSubmit} 
-                defaultValues={selectedProduct || undefined}
+                defaultValues={selectedProduct}
               />
             </div>
           </DialogContent>
