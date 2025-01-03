@@ -683,7 +683,7 @@ export default function CheckoutPage() {
                       <div key={item.id} className="flex py-4">
                         <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                           <Image
-                            src={item.images[0]}
+                            src={item.images[0].url}
                             alt={item.name}
                             width={80}
                             height={80}
