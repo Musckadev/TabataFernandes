@@ -41,11 +41,10 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className="relative aspect-square overflow-hidden bg-gray-100">
             {product.images && product.images.length > 0 && (
               <Image
-                src={product.images[0]}
+                src={product.images[0].url}
                 alt={product.name}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
-                sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
               />
             )}
             
