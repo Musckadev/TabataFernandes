@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { useCart, CartProduct } from "@/contexts/cart-context"
+import { useCart, CartProduct } from "@/components/cart/cart-context"
 import { products } from "@/data/products"
 import { formatPrice } from "@/lib/utils"
 import { Heart, Minus, Plus, Share2, ShoppingCart } from "lucide-react"
@@ -10,7 +10,6 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
-import { Product } from "@/types"
 
 interface ProductPageProps {
   params: {
@@ -34,7 +33,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       name: product.name,
       price: product.price,
       salePrice: product.salePrice,
-      images: product.images,
+      images: product.images.map(img => img.url),
       slug: product.slug
     }
     addToCart(cartProduct)
@@ -48,7 +47,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         <div className="relative">
           <div className="aspect-[4/5] overflow-hidden rounded-xl bg-gray-100">
             <Image
-              src={product.images[0]}
+              src={product.images[0].url}
               alt={product.name}
               width={500}
               height={600}

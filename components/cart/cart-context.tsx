@@ -1,15 +1,23 @@
 "use client"
 
-import { Product } from "@/types"
 import { createContext, useContext, useEffect, useState } from "react"
 import { toast } from "sonner"
 import { cartItemSchema } from "@/lib/validations"
 
-export type CartItem = Product & { quantity: number }
+export type CartProduct = {
+  id: string
+  name: string
+  price: number
+  salePrice: number | null
+  images: string[]
+  slug: string
+}
+
+export type CartItem = CartProduct & { quantity: number }
 
 interface CartContextType {
   items: CartItem[]
-  addToCart: (product: Product) => void
+  addToCart: (product: CartProduct) => void
   removeFromCart: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
@@ -79,7 +87,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, shipping])
 
-  const addToCart = async (product: Product) => {
+  const addToCart = async (product: CartProduct) => {
     try {
       setIsLoading(true)
       setError(null)
