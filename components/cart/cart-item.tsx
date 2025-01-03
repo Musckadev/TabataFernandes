@@ -30,7 +30,7 @@ export function CartItem({ item }: CartItemProps) {
       <div className="relative aspect-square h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg">
         {item.images.length > 0 && (
           <Image
-            src={item.images[0]}
+            src={item.images[0].url}
             alt={item.name}
             fill
             className="object-cover"
