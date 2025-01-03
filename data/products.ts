@@ -1,4 +1,4 @@
-import { Product } from "@/types"
+import { Product, ProductSize } from "@/types"
 
 function generateSlug(name: string): string {
   return name
@@ -23,12 +23,18 @@ export const products: Product[] = [
     inStock: true,
     isNew: true,
     isSale: false,
-    sizes: ["Único"],
+    sizes: [
+      {
+        id: "1",
+        size: "Único",
+        stockQuantity: 10
+      }
+    ],
     featured: false,
     slug: "colar-delicado-coracao",
     stones: ["Zircônia"],
     rating: 4.5,
-    reviews: 12,
+    reviewsCount: 12,
     soldCount: 25,
     createdAt: "2024-01-01"
   },
@@ -44,12 +50,18 @@ export const products: Product[] = [
     inStock: true,
     isNew: false,
     isSale: false,
-    sizes: ["Único"],
+    sizes: [
+      {
+        id: "1",
+        size: "Único",
+        stockQuantity: 10
+      }
+    ],
     featured: true,
     slug: "brinco-argola-dourada",
     stones: [],
     rating: 4.8,
-    reviews: 8,
+    reviewsCount: 8,
     soldCount: 15,
     createdAt: "2024-01-02"
   },
@@ -65,12 +77,18 @@ export const products: Product[] = [
     inStock: false,
     isNew: false,
     isSale: false,
-    sizes: ["Único"],
+    sizes: [
+      {
+        id: "1",
+        size: "Único",
+        stockQuantity: 10
+      }
+    ],
     featured: true,
     slug: "anel-solitario-diamante",
     stones: ["Diamante"],
     rating: 5.0,
-    reviews: 3,
+    reviewsCount: 4,
     soldCount: 5,
     createdAt: "2024-01-03"
   }

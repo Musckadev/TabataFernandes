@@ -6,6 +6,7 @@ import { ProductDetails } from "@/components/product/product-details"
 import { notFound } from "next/navigation"
 import { query } from "@/lib/db"
 import type { Product } from "@/types"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 interface ProductPageProps {
   params: {
@@ -34,34 +35,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Imagens do Produto */}
-        <div className="space-y-4">
-          {product.images.length > 0 && (
-            <div className="relative aspect-square overflow-hidden rounded-lg border">
-              <Image
-                src={product.images[0]}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
+    <div className="container mx-auto px-4 py-10">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="flex flex-col gap-4">
+          <AspectRatio ratio={1}>
+            <Image
+              src={product.images[0].url}
+              alt={product.name}
+              fill
+              className="object-cover"
+              priority
+            />
+          </AspectRatio>
           <div className="grid grid-cols-4 gap-4">
             {product.images.slice(1).map((image, index) => (
-              <div
-                key={index}
-                className="relative aspect-square overflow-hidden rounded-lg border"
-              >
+              <AspectRatio key={index} ratio={1}>
                 <Image
-                  src={image}
-                  alt={`${product.name} - Imagem ${index + 2}`}
+                  src={image.url}
+                  alt={`${product.name} ${index + 2}`}
                   fill
                   className="object-cover"
                 />
-              </div>
+              </AspectRatio>
             ))}
           </div>
         </div>
@@ -84,7 +79,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 ))}
               </div>
               <span className="text-sm text-gray-600">
-                ({product.reviews || 0} avaliações)
+                ({product.reviewsCount || 0} avaliações)
               </span>
             </div>
           </div>

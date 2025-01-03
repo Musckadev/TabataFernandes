@@ -5,25 +5,30 @@ export const productSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
   price: z.number().positive(),
-  salePrice: z.number().positive().optional(),
+  salePrice: z.number().positive().nullable().optional(),
   category: z.string().min(1),
   collection: z.string().min(1),
   material: z.string().min(1),
-  stockQuantity: z.number().int().min(0),
-  inStock: z.boolean(),
-  isNew: z.boolean(),
-  isSale: z.boolean(),
-  featured: z.boolean(),
+  stockQuantity: z.number().int().min(0).default(0),
+  inStock: z.boolean().default(true),
+  isNew: z.boolean().default(false),
+  isSale: z.boolean().default(false),
+  featured: z.boolean().default(false),
   slug: z.string().min(1),
-  images: z.array(z.string().url()),
+  rating: z.number().min(0).max(5).nullable().optional(),
+  reviewsCount: z.number().int().min(0).default(0),
+  soldCount: z.number().int().min(0).default(0),
+  images: z.array(z.object({
+    url: z.string().url(),
+    position: z.number().int().min(0)
+  })).default([]),
   sizes: z.array(z.object({
     size: z.string().min(1),
     stockQuantity: z.number().int().min(0)
-  })),
-  stones: z.array(z.string()).optional(),
-  rating: z.number().min(0).max(5).optional(),
-  reviewsCount: z.number().int().min(0).optional(),
-  soldCount: z.number().int().min(0).optional()
+  })).default([]),
+  stones: z.array(z.object({
+    stone: z.string().min(1)
+  })).optional().nullable()
 })
 
 export const reviewSchema = z.object({
@@ -33,76 +38,37 @@ export const reviewSchema = z.object({
   email: z.string().email(),
   rating: z.number().int().min(1).max(5),
   comment: z.string().optional(),
-  status: z.enum(["PENDING", "APPROVED", "REJECTED"]).optional()
+  status: z.enum(["PENDING", "APPROVED", "REJECTED"]).default("PENDING")
 })
 
 export const orderSchema = z.object({
   id: z.string().optional(),
-  customerName: z.string().min(1),
-  customerEmail: z.string().email(),
-  customerPhone: z.string().min(10),
-  shippingAddress: z.string().min(1),
-  shippingCity: z.string().min(1),
-  shippingState: z.string().length(2),
-  shippingZip: z.string().min(8).max(9),
-  subtotal: z.number().positive(),
-  shippingFee: z.number().min(0),
+  orderNumber: z.string(),
+  userId: z.string(),
+  status: z.enum(["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"]),
   total: z.number().positive(),
-  paymentMethod: z.string().min(1),
-  notes: z.string().optional(),
   items: z.array(z.object({
     productId: z.string(),
-    quantity: z.number().int().positive(),
+    name: z.string(),
     price: z.number().positive(),
-    total: z.number().positive(),
-    size: z.string().optional()
+    size: z.string(),
+    stone: z.string().optional(),
+    quantity: z.number().int().positive()
   }))
-})
-
-export const categorySchema = z.object({
-  id: z.string().optional(),
-  name: z.string().min(1),
-  slug: z.string().min(1),
-  description: z.string().optional(),
-  parentId: z.string().optional(),
-  active: z.boolean()
-})
-
-export const collectionSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().min(1),
-  slug: z.string().min(1),
-  description: z.string().optional(),
-  active: z.boolean()
-})
-
-export const materialSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().min(1),
-  description: z.string().optional(),
-  active: z.boolean()
-})
-
-export const stoneSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().min(1),
-  description: z.string().optional(),
-  active: z.boolean()
 })
 
 export const userSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1),
   email: z.string().email(),
-  password: z.string().min(6).optional(),
-  role: z.enum(["ADMIN", "MANAGER", "STAFF"]),
-  active: z.boolean()
+  password: z.string().min(6),
+  role: z.enum(["ADMIN", "STAFF"]).default("STAFF"),
+  active: z.boolean().default(true)
 })
 
-export const settingSchema = z.object({
+export const activityLogSchema = z.object({
   id: z.string().optional(),
-  key: z.string().min(1),
-  value: z.string(),
-  type: z.enum(["STRING", "NUMBER", "BOOLEAN", "JSON"]),
-  description: z.string().optional()
+  userId: z.string(),
+  action: z.string(),
+  details: z.string()
 })

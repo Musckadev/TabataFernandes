@@ -11,3 +11,12 @@ export function formatPrice(price: number) {
     currency: "BRL",
   }).format(price)
 }
+
+export function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}

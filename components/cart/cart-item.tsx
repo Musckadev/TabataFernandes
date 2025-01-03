@@ -16,12 +16,12 @@ export function CartItem({ item }: CartItemProps) {
   const { removeFromCart, updateQuantity } = useCart()
 
   const handleRemove = () => {
-    removeFromCart(item)
+    removeFromCart(item.id)
   }
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newQuantity = parseInt(event.target.value)
-    updateQuantity(item, newQuantity)
+    updateQuantity(item.id, newQuantity)
   }
 
   return (

@@ -8,14 +8,11 @@ export async function GET() {
       orderBy: {
         createdAt: "desc",
       },
-      include: {
-        user: true,
-      },
     })
 
     const formattedOrders = orders.map((order) => ({
       id: order.id,
-      customer: order.user.name,
+      customer: order.customerName,
       date: order.createdAt.toISOString().split("T")[0],
       status: order.status,
       total: order.total,

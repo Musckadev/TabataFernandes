@@ -1,6 +1,6 @@
 "use client"
 
-import type { Product } from "@/data/products"
+import { Product } from "@/types"
 import { products } from "@/data/products"
 import { ProductCard } from "./product-card"
 
@@ -38,7 +38,7 @@ export function ProductGrid({
 
   if (filterStones) {
     filteredProducts = filteredProducts.filter(
-      (product) => product.stones === filterStones
+      (product) => product.stones?.includes(filterStones)
     )
   }
 

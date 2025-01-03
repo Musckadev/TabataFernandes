@@ -29,7 +29,31 @@ export default function ProductPage({ params }: ProductPageProps) {
   }
 
   const handleAddToCart = () => {
-    addToCart(product)
+    const cartProduct: Product = {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      salePrice: product.salePrice,
+      category: product.category,
+      collection: product.collection,
+      material: product.material,
+      images: product.images,
+      stockQuantity: product.stockQuantity,
+      inStock: product.inStock,
+      isNew: product.isNew,
+      isSale: product.isSale,
+      sizes: product.sizes,
+      featured: product.featured,
+      slug: product.slug,
+      stones: product.stones,
+      rating: product.rating,
+      reviewsCount: product.reviewsCount,
+      soldCount: product.soldCount,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt
+    }
+    addToCart(cartProduct)
     toast.success("Produto adicionado ao carrinho")
   }
 

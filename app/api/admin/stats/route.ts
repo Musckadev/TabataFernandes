@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { OrderStatus, Role } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export async function GET() {
@@ -32,7 +33,7 @@ export async function GET() {
     const [
       currentMonthSales,
       currentMonthOrders,
-      currentMonthCustomers,
+      currentMonthUsers,
       totalProducts,
     ] = await Promise.all([
       // Total de vendas do mês atual
@@ -42,7 +43,7 @@ export async function GET() {
             gte: firstDayOfMonth,
             lte: lastDayOfMonth,
           },
-          status: "COMPLETED",
+          status: OrderStatus.DELIVERED,
         },
         _sum: {
           total: true,
@@ -59,27 +60,22 @@ export async function GET() {
         },
       }),
 
-      // Total de clientes do mês atual
+      // Total de usuários do mês atual
       prisma.user.count({
         where: {
           createdAt: {
             gte: firstDayOfMonth,
             lte: lastDayOfMonth,
           },
-          role: "CUSTOMER",
         },
       }),
 
-      // Total de produtos ativos
-      prisma.product.count({
-        where: {
-          active: true,
-        },
-      }),
+      // Total de produtos
+      prisma.product.count(),
     ])
 
     // Buscar dados do mês anterior
-    const [lastMonthSales, lastMonthOrders, lastMonthCustomers] =
+    const [lastMonthSales, lastMonthOrders, lastMonthUsers] =
       await Promise.all([
         // Total de vendas do mês anterior
         prisma.order.aggregate({
@@ -88,7 +84,7 @@ export async function GET() {
               gte: firstDayOfLastMonth,
               lte: lastDayOfLastMonth,
             },
-            status: "COMPLETED",
+            status: OrderStatus.DELIVERED,
           },
           _sum: {
             total: true,
@@ -105,22 +101,21 @@ export async function GET() {
           },
         }),
 
-        // Total de clientes do mês anterior
+        // Total de usuários do mês anterior
         prisma.user.count({
           where: {
             createdAt: {
               gte: firstDayOfLastMonth,
               lte: lastDayOfLastMonth,
             },
-            role: "CUSTOMER",
           },
         }),
       ])
 
     // Calcular variações percentuais
     const salesChange = lastMonthSales._sum.total
-      ? ((currentMonthSales._sum.total || 0) - lastMonthSales._sum.total) /
-        lastMonthSales._sum.total *
+      ? ((Number(currentMonthSales._sum.total || 0) - Number(lastMonthSales._sum.total)) /
+          Number(lastMonthSales._sum.total)) *
         100
       : 0
 
@@ -128,8 +123,8 @@ export async function GET() {
       ? ((currentMonthOrders - lastMonthOrders) / lastMonthOrders) * 100
       : 0
 
-    const customersChange = lastMonthCustomers
-      ? ((currentMonthCustomers - lastMonthCustomers) / lastMonthCustomers) * 100
+    const usersChange = lastMonthUsers
+      ? ((currentMonthUsers - lastMonthUsers) / lastMonthUsers) * 100
       : 0
 
     // Buscar total de produtos do mês anterior
@@ -138,7 +133,6 @@ export async function GET() {
         createdAt: {
           lte: lastDayOfLastMonth,
         },
-        active: true,
       },
     })
 
@@ -149,11 +143,11 @@ export async function GET() {
     return NextResponse.json({
       totalSales: currentMonthSales._sum.total || 0,
       totalOrders: currentMonthOrders,
-      totalCustomers: currentMonthCustomers,
+      totalUsers: currentMonthUsers,
       totalProducts,
       salesChange: Number(salesChange.toFixed(2)),
       ordersChange: Number(ordersChange.toFixed(2)),
-      customersChange: Number(customersChange.toFixed(2)),
+      usersChange: Number(usersChange.toFixed(2)),
       productsChange: Number(productsChange.toFixed(2)),
     })
   } catch (error) {

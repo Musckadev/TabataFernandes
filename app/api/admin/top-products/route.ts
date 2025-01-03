@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { OrderStatus } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export async function GET() {
@@ -23,7 +24,7 @@ export async function GET() {
             gte: firstDayOfMonth,
             lte: lastDayOfMonth,
           },
-          status: "COMPLETED",
+          status: OrderStatus.DELIVERED,
         },
       },
       _sum: {

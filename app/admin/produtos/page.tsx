@@ -19,9 +19,41 @@ import { toast } from "sonner"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 
-type ProductFormData = Omit<Product, 'price' | 'salePrice'> & {
-  price: string;
-  salePrice?: string;
+interface ProductFormData {
+  id?: string
+  name: string
+  description: string
+  price: string
+  salePrice?: string
+  category: string
+  collection: string
+  material: string
+  stockQuantity: number
+  inStock: boolean
+  isNew: boolean
+  isSale: boolean
+  featured: boolean
+  slug: string
+  images: Array<{
+    url: string
+    position: number
+  }>
+  sizes: Array<{
+    size: string
+    stockQuantity: number
+  }>
+  stones?: Array<{
+    stone: string
+  }>
+  rating?: number
+  reviewsCount?: number
+  soldCount?: number
+  sku?: string
+  weight?: string
+  dimensions?: string
+  metaTitle?: string
+  metaDescription?: string
+  keywords?: string
 }
 
 export default function ProductsPage() {
@@ -97,7 +129,10 @@ export default function ProductsPage() {
     const formData: ProductFormData = {
       ...product,
       price: product.price.toString(),
-      salePrice: product.salePrice?.toString(),
+      salePrice: product.salePrice ? product.salePrice.toString() : undefined,
+      sizes: product.sizes.map(s => ({ size: s.size, stockQuantity: s.stockQuantity })),
+      images: product.images.map(image => ({ url: image.url, position: image.position })),
+      stones: product.stones?.map(stone => ({ stone: stone.stone }))
     }
     setSelectedProduct(formData)
     setOpen(true)
