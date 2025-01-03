@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { useCart } from "@/components/cart/cart-context"
+import { useCart, CartProduct } from "@/contexts/cart-context"
 import { products } from "@/data/products"
 import { formatPrice } from "@/lib/utils"
 import { Heart, Minus, Plus, Share2, ShoppingCart } from "lucide-react"
@@ -29,32 +29,16 @@ export default function ProductPage({ params }: ProductPageProps) {
   }
 
   const handleAddToCart = () => {
-    const cartProduct: Product = {
+    const cartProduct: CartProduct = {
       id: product.id,
       name: product.name,
-      description: product.description,
       price: product.price,
       salePrice: product.salePrice,
-      category: product.category,
-      collection: product.collection,
-      material: product.material,
       images: product.images,
-      stockQuantity: product.stockQuantity,
-      inStock: product.inStock,
-      isNew: product.isNew,
-      isSale: product.isSale,
-      sizes: product.sizes,
-      featured: product.featured,
-      slug: product.slug,
-      stones: product.stones,
-      rating: product.rating,
-      reviewsCount: product.reviewsCount,
-      soldCount: product.soldCount,
-      createdAt: product.createdAt,
-      updatedAt: product.updatedAt
+      slug: product.slug
     }
     addToCart(cartProduct)
-    toast.success("Produto adicionado ao carrinho")
+    toast.success("Produto adicionado ao carrinho!")
   }
 
   return (

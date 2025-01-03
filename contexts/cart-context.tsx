@@ -3,13 +3,15 @@
 import { Product } from "@/types"
 import { createContext, useContext, useEffect, useState } from "react"
 
-interface CartItem extends Product {
+export type CartProduct = Pick<Product, 'id' | 'name' | 'price' | 'salePrice' | 'images' | 'slug'>
+
+interface CartItem extends CartProduct {
   quantity: number
 }
 
 interface CartContextType {
   items: CartItem[]
-  addItem: (product: Product) => void
+  addItem: (product: CartProduct) => void
   removeItem: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
@@ -37,7 +39,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("cart", JSON.stringify(items))
   }, [items])
 
-  const addItem = (product: Product) => {
+  const addItem = (product: CartProduct) => {
     console.log('Adding item to cart:', product);
     setItems(currentItems => {
       console.log('Current items:', currentItems);
