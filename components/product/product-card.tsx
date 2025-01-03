@@ -104,9 +104,9 @@ export function ProductCard({ product }: ProductCardProps) {
                 {product.material}
               </Badge>
             )}
-            {product.stones && (
+            {product.stones && product.stones.length > 0 && (
               <Badge className="bg-gray-100 text-xs text-gray-700 hover:bg-gray-200">
-                {product.stones}
+                {product.stones.map(stone => stone.stone).join(", ")}
               </Badge>
             )}
           </div>
