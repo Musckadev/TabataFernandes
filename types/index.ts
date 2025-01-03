@@ -21,6 +21,12 @@ export type Product = {
   images: ProductImage[]
   sizes: ProductSize[]
   stones: ProductStone[] | null
+  sku: string
+  weight: string
+  dimensions: string
+  metaTitle: string
+  metaDescription: string
+  keywords: string
   createdAt: Date
   updatedAt: Date
 }
