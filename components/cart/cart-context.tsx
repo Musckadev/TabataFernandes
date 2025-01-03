@@ -2,16 +2,9 @@
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { toast } from "sonner"
-import { cartItemSchema } from "@/lib/validations"
+import { Product } from "@/types"
 
-export type CartProduct = {
-  id: string
-  name: string
-  price: number
-  salePrice: number | null
-  images: string[]
-  slug: string
-}
+export type CartProduct = Product
 
 export type CartItem = CartProduct & { quantity: number }
 
@@ -55,10 +48,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const savedItems = localStorage.getItem("cart")
       if (savedItems) {
         const parsedItems = JSON.parse(savedItems)
-        // Validar cada item
-        parsedItems.forEach((item: CartItem) => {
-          cartItemSchema.parse({ productId: item.id, quantity: item.quantity })
-        })
         setItems(parsedItems)
       }
     } catch (error) {
@@ -101,23 +90,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      setItems(currentItems => {
-        const existingItem = currentItems.find(item => item.id === product.id)
-        if (existingItem) {
-          // Verificar se não excede o estoque
-          if (existingItem.quantity + 1 > availableQuantity) {
-            toast.error(`Apenas ${availableQuantity} unidades disponíveis`)
-            return currentItems
-          }
-          
-          return currentItems.map(item =>
+      const existingItem = items.find((item) => item.id === product.id)
+
+      if (existingItem) {
+        const newQuantity = existingItem.quantity + 1
+        if (newQuantity > availableQuantity) {
+          toast.error(`Apenas ${availableQuantity} unidades disponíveis`)
+          return
+        }
+
+        setItems((currentItems) =>
+          currentItems.map((item) =>
             item.id === product.id
-              ? { ...item, quantity: item.quantity + 1 }
+              ? { ...item, quantity: newQuantity }
               : item
           )
-        }
-        return [...currentItems, { ...product, quantity: 1 }]
-      })
+        )
+      } else {
+        setItems((currentItems) => [...currentItems, { ...product, quantity: 1 }])
+      }
 
       toast.success("Produto adicionado ao carrinho")
     } catch (error) {
@@ -131,7 +122,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const removeFromCart = (productId: string) => {
     try {
-      setItems(currentItems => currentItems.filter(item => item.id !== productId))
+      setItems((currentItems) => currentItems.filter((item) => item.id !== productId))
       toast.success("Produto removido do carrinho")
     } catch (error) {
       console.error("Error removing from cart:", error)
@@ -159,11 +150,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      setItems(currentItems =>
-        currentItems.map(item =>
-          item.id === productId
-            ? { ...item, quantity }
-            : item
+      setItems((currentItems) =>
+        currentItems.map((item) =>
+          item.id === productId ? { ...item, quantity } : item
         )
       )
     } catch (error) {

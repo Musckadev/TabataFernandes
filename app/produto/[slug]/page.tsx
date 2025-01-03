@@ -28,15 +28,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   }
 
   const handleAddToCart = () => {
-    const cartProduct: CartProduct = {
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      salePrice: product.salePrice,
-      images: product.images.map(img => img.url),
-      slug: product.slug
-    }
-    addToCart(cartProduct)
+    addToCart(product)
     toast.success("Produto adicionado ao carrinho!")
   }
 
