@@ -24,7 +24,7 @@ interface ProductFormData {
   name: string
   description: string
   price: string
-  salePrice?: string
+  salePrice?: string | null
   category: string
   collection: string
   material: string
@@ -44,16 +44,16 @@ interface ProductFormData {
   }>
   stones?: Array<{
     stone: string
-  }>
-  rating?: number
-  reviewsCount?: number
-  soldCount?: number
-  sku?: string
-  weight?: string
-  dimensions?: string
-  metaTitle?: string
-  metaDescription?: string
-  keywords?: string
+  }> | null
+  rating?: number | null
+  reviewsCount: number
+  soldCount: number
+  sku: string
+  weight: string
+  dimensions: string
+  metaTitle: string
+  metaDescription: string
+  keywords: string
 }
 
 export default function ProductsPage() {
@@ -129,10 +129,19 @@ export default function ProductsPage() {
     const formData: ProductFormData = {
       ...product,
       price: product.price.toString(),
-      salePrice: product.salePrice ? product.salePrice.toString() : undefined,
+      salePrice: product.salePrice ? product.salePrice.toString() : null,
       sizes: product.sizes.map(s => ({ size: s.size, stockQuantity: s.stockQuantity })),
       images: product.images.map(image => ({ url: image.url, position: image.position })),
-      stones: product.stones?.map(stone => ({ stone: stone.stone }))
+      stones: product.stones?.map(stone => ({ stone: stone.stone })) || null,
+      rating: product.rating,
+      reviewsCount: product.reviewsCount,
+      soldCount: product.soldCount,
+      sku: product.sku || "",
+      weight: product.weight || "",
+      dimensions: product.dimensions || "",
+      metaTitle: product.metaTitle || "",
+      metaDescription: product.metaDescription || "",
+      keywords: product.keywords || ""
     }
     setSelectedProduct(formData)
     setOpen(true)
